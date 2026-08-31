@@ -1,0 +1,5 @@
+interface:
+  display_name: "零度狗血写作器"
+  short_description: "用冷静叙述、精确数字与物件回环创作第一人称狗血故事"
+  default_prompt: "Use $sun-yuchen-melodrama-writer to write a first-person melodrama with restrained narration and natural paragraphs."
+
