@@ -1,35 +1,53 @@
-# 零度狗血写作器
+# 短剧连载写作器
 
-一个独立构建的 Codex Skill，用于创作或改写中文第一人称狗血故事、独白和短剧。
+一个 Codex / Claude Skill：你只写一个主题和大致故事框架，AI 按番茄爆款网文与竖屏狗血短剧的手法，帮你连续更新 10—20 章（集）。每章不长，但每章都有一个爽点或反转，结尾都切在最想看下一集的地方。
 
-它研究孙宇晨公开虚构长文《我的女友景甜》的可观察文本特征，但不复刻原文人物、事件或句子，也不用于冒充现实人物。
+## 它会做什么
 
-## 特点
+1. **设定卡**：一句话卖点、题材公式、主角底牌、对手、情感线、核心秘密。
+2. **分集节奏表**：每集的爽点、反转和集尾钩子类型，黄金三集和卡点位置都排好。
+3. **正文**：每次 3—5 集，章节默认 800—1500 字，剧本默认 1—2 分钟。
+4. **连载状态卡**：记录已揭秘密和未回收伏笔，说“继续”就能接着写不崩。
 
-- 情节激烈，叙述克制。
-- 用数字表现关系代价，用物件保存记忆。
-- 呈现维持主角世界的第三方劳动。
-- 用第一次拒绝制造转折，用残留程序完成结尾。
-- 长文默认使用自然段落，不机械地一句一行。
+## 研究基础
+
+- 24 部番茄热门网文与红果等平台爆款短剧的设定、题材标签和业内拆解（见 `references/case-notes.md`）。
+- 黄金三章、情绪循环、单集秒数结构、八种集尾钩子、二卡三卡卡点（见 `references/hook-and-pacing.md`）。
+- 14 个女频 / 男频题材公式（见 `references/trope-library.md`）。
+
+只学机制，不复用任何作品的人物、设定组合或句子。
 
 ## 安装
 
+Codex：
+
 ```bash
-git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.codex/skills/sun-yuchen-melodrama-writer
+git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.codex/skills/short-drama-serial-writer
 ```
 
-重新打开 Codex 后即可使用。
+Claude Code：
+
+```bash
+git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.claude/skills/short-drama-serial-writer
+```
+
+重新打开后即可使用。
 
 ## 示例
 
-- 用零度狗血风格写一篇第一人称豪门分手故事。
-- 把现有剧情改成 90 秒克制独白，保留自然段落。
-- 为亲缘题材设计一个由旧物推动的八集季纲。
+- 写一部 12 集女频短剧：被退婚的女配其实是集团真正的继承人。
+- 主题“重生回到高考前一天”，写 15 章网文，每章 1000 字左右。
+- 把这个框架写成 10 集竖屏短剧剧本：外卖员给前女友的婚礼送餐。
+- 继续更新下一批。
+- 用零度冷叙述文风写一部 10 集豪门分手短剧。
 
 ## 文件
 
-- `SKILL.md`：触发范围、工作流和输出规则。
-- `references/voice-guide.md`：来源、独立统计与详细文体机制。
+- `SKILL.md`：工作流和输出规则。
+- `references/hook-and-pacing.md`：节奏、钩子、卡点手册。
+- `references/trope-library.md`：题材公式库。
+- `references/case-notes.md`：热门 IP 拆解笔记。
+- `references/voice-guide.md`：可选的零度冷叙述文风（原“零度狗血写作器”）。
+- `examples/sample-12-episodes.md`：试跑样例（设定卡 + 节奏表 + 前三章）。
+- `scripts/check_episodes.py`：检查每集字数和结尾钩子。
 - `agents/openai.yaml`：Codex 界面元数据。
-
-主锚点来自[公开 X 帖子](https://x.com/justinsuntron/status/2092932777612390850)及其[官方排版源](https://github.com/HEJustinSun/my-girlfriend-jingtian-latex/blob/main/main.tex)。原作明确标注为虚构，本仓库不收录原文全文。
