@@ -82,6 +82,7 @@
 网点 / 配色倾向：阴影网点比别人深一档
 
 【表演卡】顾衍
+人设模板：禁欲系为主；后期和林晚并肩时，偶尔露出温柔系的笑（反差点）
 性格关键词：冷静、克制、正直
 眼型眉形：细长眼，平眉
 默认体态：站直，一只手插在白大褂口袋里｜standing upright, one hand in his white coat pocket
@@ -128,6 +129,8 @@ python scripts/render_visuals.py cover --image cover-a.png \
 B、C 的提示词按 A 的结构写，人物描述照抄外观卡的英文描述串。用户选定后写进 `story-bible.md`。
 
 ## 第 1 章 4 格分镜（彩色，自由分格 `4-inset`）
+
+调性：爽 / 冲突（家庭对峙），最后的钩子格转悬疑。调性后缀 `high contrast dramatic lighting, intense tension` 接在画风前缀后面；第 4 格换成 `mysterious low-key lighting, deep shadows, a single pool of light`。
 
 本章结尾是配型报告的揭露，所以选“插入特写”模板：第 4 格是压在第 3 格左下角的特写小格。各格比例来自 `python scripts/render_visuals.py sizes --layout 4-inset`。
 

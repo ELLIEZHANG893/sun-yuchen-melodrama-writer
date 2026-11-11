@@ -272,6 +272,39 @@
 - **专属演出不要撞**：主角和对手的情绪顶点演出要明显不同。
 - 不改画法：表演卡只改“演”，不改线条、上色、五官画法，所以画风仍然统一。
 
+#### 男性人设模板（写帅哥时从这里起步）
+
+同样是帅哥，读者靠**眼眉、发型轮廓、体型、穿搭、体态、小动作和专属演出**分辨他是哪一型。下面每种模板给出这些要点和可直接用的英文短语。用法：选一个模板做起点，再用外观卡里的具体细节（发色、标志物、配色）把他变成“这个人”，不要整段照抄成套路脸。
+
+| 类型 | 外形要点 | 表演（体态 / 小动作 / 招牌表情） | 专属演出 |
+|---|---|---|---|
+| 高冷系 | 细长凤眼、眼尾微挑、浓平眉；深色利落短发，额前碎发半遮眼；高瘦；深色大衣、高领毛衣 | 双手插兜、侧身、下巴微抬；移开视线；几乎不笑，心动时只有耳朵红 | 逆光剪影、冷色、大留白 |
+| 阳光可爱系（年下 / 小狗系） | 圆眼、眼角下垂、高弯眉；浅色蓬松短发、一撮呆毛；少年感身形；连帽卫衣、运动外套 | 身体前倾、歪头；挠头、凑近；露虎牙大笑，委屈时狗狗眼 | 暖光、星星和花、Q 版最常用 |
+| 霸道总裁 | 剑眉压低、眼神锐利、下颌线清晰、薄唇；深色背头或侧分；高大宽肩；三件套西装、领带 | 单手插兜俯视、靠在桌边；松领带、挑眉、单手撑墙；一侧嘴角上扬的笑 | 仰拍、夜景城市灯光、深网点 |
+| 校园学长（大学） | 温和圆眼、清爽短发带刘海；白衬衫或针织背心；单肩背包 | 手里拿着书；揉对方头发、递东西；温柔浅笑 | 夕阳逆光、树影、柔焦 |
+| 运动系学长 | 运动短发或头带、浓眉大眼、小麦色皮肤；肩宽，有肌肉线条但不夸张；球衣、毛巾挂在脖子上 | 叉腰喘气；擦汗、拍肩、仰头喝水；爽朗大笑，比赛时咬牙专注 | 速度线、飞溅的汗珠、强阳光高光 |
+| 禁欲系 | 细框或金丝眼镜、眼神淡、眉形规整；一丝不苟的三七分；修长；衬衫扣到最上一颗、马甲或白大褂 | 站得笔直、双手交叠；推眼镜、翻书；面无表情、眼镜反光遮眼；破防时镜片后的眼睛睁大、微微脸红 | 冷白光、规整构图、大留白 |
+| 痞帅系 | 桃花眼、嘴角痞笑；碎发微乱、一侧刘海；皮夹克、银色链子、耳钉 | 歪靠在墙上、单手插兜；叼棒棒糖、转钥匙圈；坏笑、眯一只眼 | 霓虹夜色、半张脸阴影 |
+| 温柔系（暖男） | 下垂眼、柔和弯眉；棕色微卷发；针织开衫、围巾 | 微微低头倾听；递热饮、帮人整理围巾；眼睛弯起来的笑 | 暖光、柔焦光斑 |
+
+```text
+高冷系：narrow sharp eyes with slightly upturned corners, thick straight brows, sleek dark short hair with bangs half covering his eyes, tall and lean, dark long coat over a turtleneck｜hands in pockets, turned slightly away, chin raised, looking away, expressionless except his ears turning red｜backlit silhouette, cool tones, lots of empty space
+阳光可爱系：round eyes with drooping corners, high arched brows, fluffy light-colored hair with an ahoge, youthful build, hoodie and track jacket｜leaning forward with his head tilted, scratching the back of his head, wide grin showing a small fang, puppy-dog eyes when sulking｜warm light, sparkles and flowers
+霸道总裁：sharp intense eyes under lowered brows, defined jawline, thin lips, slicked-back dark hair, tall with broad shoulders, tailored three-piece suit and tie｜one hand in pocket looking down, leaning against a desk, loosening his tie, raising one eyebrow, one-sided smirk｜low-angle shot, night city lights, deep shadows
+校园学长（大学）：gentle round eyes, neat short hair with soft bangs, white shirt or knit vest, backpack on one shoulder｜holding a book, patting someone's head, gentle smile｜sunset backlight, dappled tree shadows, soft focus
+运动系学长：sporty short hair with a headband, thick brows and bright eyes, tanned skin, broad shoulders with toned arms, basketball jersey, towel around his neck｜hands on hips catching his breath, wiping sweat, drinking water with his head tilted back, big open laugh, gritted-teeth focus during the game｜speed lines, flying sweat drops, strong sunlight highlights
+禁欲系：thin-framed glasses, calm distant eyes, neat brows, precise side-parted hair, tall and slender, shirt buttoned to the top with a vest or white coat｜standing perfectly straight, hands folded, pushing up his glasses, expressionless with light glinting off his lenses, eyes widening behind the glasses and a faint blush when flustered｜cool white light, orderly composition, lots of empty space
+痞帅系：flirtatious peach-blossom eyes, crooked grin, slightly messy hair with side-swept bangs, leather jacket, silver chain, ear stud｜leaning against a wall with one hand in pocket, lollipop in his mouth, twirling a key ring, sly smirk with one eye half closed｜neon night colors, half of his face in shadow
+温柔系：gentle drooping eyes, soft arched brows, wavy brown hair, cardigan and scarf｜head slightly lowered as he listens, handing over a warm drink, adjusting someone's scarf, smile that makes his eyes curve｜warm light, soft bokeh
+```
+
+规则：
+- **同一部作品里的两个男性主角，必须来自不同模板**，而且发型轮廓和穿搭冷暖要拉开，涂黑剪影也能分出是谁。
+- 模板之间可以混搭一项，但要有一个主类型。例如“禁欲系为主，心动时露出温柔系的笑”，反差本身就是看点。
+- **恋爱线里的角色一律是成年人。** 校园题材的恋爱线用大学学长或已成年的设定；高中生只出现在友情、成长、校园日常这类非恋爱剧情里，也不用痞帅、霸总这类带撩拨感的模板去写未成年人。
+- 黑白风格下：霸总、痞帅的网点更深、阴影更重；阳光系、温柔系网点更浅、眼中高光更多；高冷、禁欲系画面最干净。
+- 女性角色同理，可以按同样格式补模板（如冷艳御姐、元气少女、温柔知性、清冷学霸），写进 `story-bible.md` 供本作使用。
+
 ### 4.5 定妆表：先定脸，再出分镜
 
 每个主要角色先出一张定妆表，满意后作为后面每一格的参考图。全身视图用默认体态，四个表情用表演卡里的表情演法：
@@ -288,7 +321,7 @@
 ### 4.6 每格提示词的拼装顺序（固定）
 
 ```text
-[画风前缀] + [人物画法后缀] + [出场角色的英文描述串，几个人贴几段]
+[画风前缀] + [本章调性后缀，见第六节] + [人物画法后缀] + [出场角色的英文描述串，几个人贴几段]
 + [这个角色的表情演法 / 默认体态 / 招牌小动作，取自表演卡] + [动作]
 + [镜头，取自演出库] + [背景演出，取自演出库] + [变形 / 漫画符号，需要时]
 + [场景：取自视觉设定的场景基调；用了背景演出时场景可以省略]
@@ -297,7 +330,7 @@
 + [负面：no text, no letters, no speech bubbles, no watermark, no signature]
 ```
 
-用了背景演出时，从画风前缀里删掉和它冲突的背景词（例如黑白前缀里的 sparkle and soft bokeh screentone background 在压抑、愤怒的格子里要删掉）；同理，角色设定和画风前缀冲突的词也删（例如林晚没有雀斑，就删掉 freckles）。
+用了背景演出时，从画风前缀里删掉和它冲突的背景词（例如黑白前缀里的 sparkle and soft bokeh screentone background 在压抑、愤怒的格子里要删掉）；同理，角色设定和画风前缀冲突的词也删（例如林晚没有雀斑，就删掉 freckles）；调性后缀和画风前缀里的配色、背景词冲突时，以调性为准（见第六节）。
 
 每格在变的只有“表情演法、动作、镜头、背景演出、留白、比例”，而且前四项都从表演卡和演出库里选现成的短语，不临场发挥。画风前缀、画法后缀、描述串全部复制粘贴。这是画风稳定、表现力又够的关键。
 
@@ -383,7 +416,40 @@ Q 版和喜剧符号只用在轻松瞬间；剧情高潮、虐点、钩子格不
 
 ---
 
-## 六、可以微调的地方
+## 六、章节调性：恋爱章和搞笑章不一样
+
+同一部作品里，讲爱情线的章节、搞笑的章节、虐的章节，画面气质应该不同。但**换的是“打光和演出”，不是“换画师”**。
+
+**调性能改的**：光影和色调（黑白是网点深浅）、背景演出、镜头偏好、分格模板、漫画符号和 Q 版的使用频率、音效字多少。
+**调性不能改的**：线条和上色方式、人物画法后缀、外观卡（长相、服装、标志物）、表演卡。服装颜色可以在光线下变暖或变冷，但不换色。
+
+| 调性 | 适用章节 | 彩色 | 黑白 | 镜头 / 演出偏好 | 分格偏好 |
+|---|---|---|---|---|---|
+| 恋爱 / 心动 | 告白、靠近、约会、暧昧 | 暖粉、雾粉紫，柔光、光斑 | 网点浅，闪光点和花朵，线条更柔 | 眼睛特写、手部特写、慢镜头式的连续特写 | 无框大格、插入特写（`4-hero`、`m4-embrace`） |
+| 搞笑 / 日常 | 吐槽、误会、出糗、轻松日常 | 高饱和纯色块，速度线、星星 | 网点少、留白多，线条略粗 | Q 版、黑线脸、大汗珠、灵魂出窍可常用（最多约 1/3 的格子） | 小格多、节奏快（`4-splash`、`9-splash`，或规整网格） |
+| 虐 / 悲伤 | 分离、误解、失去、低谷 | 降低饱和，冷蓝灰 | 深网点、雨、碎玻璃 | 背影、俯拍、大留白，字少 | 大格少字（`4-hero`、`m4-confess`） |
+| 爽 / 冲突 | 打脸、对峙、反击 | 高反差，红黑 | 黑底、集中线、白闪电 | 仰拍、夸张透视、爆炸气泡、角色专属演出 | 斜切格、动作大格（`4-splash`、`m4-closeup`） |
+| 悬疑 / 揭秘 | 发现线索、真相露出一角 | 暗色，只有局部有光 | 深网点、半张脸阴影 | 物件特写、倾斜镜头 | 插入特写（`4-inset`） |
+
+**调性后缀**（接在画风前缀后面）：
+
+```text
+恋爱 / 心动：soft romantic lighting, gentle glow, dreamy soft focus, sparkles
+搞笑 / 日常：lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions
+虐 / 悲伤：melancholic mood, muted cold blue-gray palette, quiet empty space
+爽 / 冲突：high contrast dramatic lighting, intense tension
+悬疑 / 揭秘：mysterious low-key lighting, deep shadows, a single pool of light
+```
+
+规则：
+- **每章一个主调性**，在分镜开头标出来，例如“调性：爽 / 冲突”。
+- **允许钩子格转调**：搞笑章的最后一格突然转虐或悬疑，反差最强，是很好用的集尾钩子。其他格不要来回换调性。
+- 调性后缀和画风前缀里的配色、背景词冲突时，以调性为准，删掉前缀里冲突的那几个词（例如虐章删掉 soft warm palette 那一串配色）；线条、上色方式、人物画法的词一律保留。
+- 爱情线和搞笑线的角色都要演出各自的人设：同样是恋爱章，高冷系还是只有耳朵红，阳光系可以整张脸红到冒烟。
+
+---
+
+## 七、可以微调的地方
 
 用户想微调时，从这张表里挑，改动写进 `story-bible.md` 的“画风”一节，提示词前缀和分镜 JSON 的 `"style"` 一起改：
 
@@ -401,7 +467,7 @@ Q 版和喜剧符号只用在轻松瞬间；剧情高潮、虐点、钩子格不
 
 ---
 
-## 七、确认流程（skill 对用户说的话）
+## 八、确认流程（skill 对用户说的话）
 
 第一次为这部作品做漫画时，在**一条消息**里给出三样东西，然后只问一个问题：
 
