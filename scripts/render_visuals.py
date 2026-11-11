@@ -51,6 +51,17 @@ SANS_CANDIDATES = [
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
     "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
 ]
+MEDIUM_CANDIDATES = [
+    "/System/Library/Fonts/PingFang.ttc",               # 选 PingFang SC Medium
+    "C:/Windows/Fonts/msyh.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
+    "/usr/share/fonts/noto-cjk/NotoSansCJK-Medium.ttc",
+    "/usr/share/fonts/google-noto-cjk/NotoSansCJK-Medium.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+]
+# 随 skill 一起分发的开源字体（OFL）：站酷快乐体，用于音效字和旁白，手写感、活泼
+DISPLAY_CANDIDATES = [os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts",
+                                   "ZCOOLKuaiLe-Regular.ttf")]
 SERIF_CANDIDATES = [
     # macOS
     "/System/Library/Fonts/Supplemental/Songti.ttc",
@@ -67,7 +78,8 @@ SERIF_CANDIDATES = [
     "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc",
 ]
 
-FONT_FILES = {"sans": None, "serif": None}
+FONT_FILES = {"sans": None, "serif": None, "medium": None, "display": None}
+FACE_WANT = {"medium": "Medium"}
 _FONT_CACHE, _FACE_INDEX, _GLYPH_CACHE = {}, {}, {}
 
 CANVAS_W, CANVAS_H = 1080, 1920
@@ -78,17 +90,23 @@ TITLE_BAND, FOOTER_BAND = 150, 90
 STYLES = {
     "color": {  # 暖调扁平图像小说风
         "bg": "#FBF3E6",          # 奶油纸色底，格距里露出来
-        "ink": "#1F1A17",         # 暖黑：边框、文字、描线
-        "border": 5,              # 粗黑格框
-        "gutter": 26,
-        "margin": 44,
-        "text_font": "sans",      # 对白用圆润黑体
-        "title_font": "sans",
+        "ink": "#4A3A30",         # 暖深棕：格框、气泡线（参考图是细的深棕线，不是纯黑粗线）
+        "text": "#2F2722",        # 对白文字：深棕灰，不用纯黑
+        "border": 2.5,            # 细格框
+        "gutter": 22,
+        "margin": 40,
+        "text_font": "medium",    # 对白用中等字重的黑体，不用粗体
+        "title_font": "display",  # 标题、页码用手写感字体
+        "caption_font": "display",
+        "sfx_font": "display",
+        "title_size": 40,
         "vertical": False,        # 横排对白
-        "bubble_line": 3,
-        "caption_fill": "#FFFFFF",
+        "bubble": "oval",         # 椭圆气泡
+        "bubble_line": 2,
+        "speed_weight": 0.5,      # 速度线细一些
+        "caption_fill": "#FFFDF8",
         "caption_pos": "top-left",
-        "sfx_fill": "#1F1A17",
+        "sfx_fill": "#3B2E27",
         "sfx_stroke": "#FFFFFF",
         "rtl": False,
         "placeholder": ["#F2B5A3", "#F7D6B5", "#BCD9EA", "#F4E4A1", "#CDE2CF", "#E9C3D3"],
@@ -96,7 +114,12 @@ STYLES = {
     "bw": {  # 日式都市恋爱漫画风
         "bg": "#FFFFFF",
         "ink": "#111111",
+        "text": "#111111",
         "border": 3,              # 细黑格框
+        "title_size": 44,
+        "caption_font": "serif",
+        "sfx_font": "display",
+        "speed_weight": 0.8,
         "gutter": 16,
         "margin": 36,
         "text_font": "serif",     # 对白用宋体
@@ -141,31 +164,41 @@ def setup_fonts(sans=None, serif=None):
         FONT_FILES["sans"] = FONT_FILES["serif"]
     if not FONT_FILES["sans"]:
         sys.exit("没找到中文字体。请安装思源黑体 / Noto Sans CJK，或用 --font 指定 .ttf/.ttc/.otf 文件。")
+    FONT_FILES["medium"] = pick_font(None, MEDIUM_CANDIDATES) or FONT_FILES["sans"]
+    FONT_FILES["display"] = pick_font(None, DISPLAY_CANDIDATES) or FONT_FILES["sans"]
 
 
-def face_index(path):
-    """.ttc 里有多个字体时，优先简体中文（SC）那一个。"""
-    if path in _FACE_INDEX:
-        return _FACE_INDEX[path]
-    idx = 0
+def face_index(path, want=None):
+    """.ttc 里有多个字体时，优先简体中文（SC）那一个；want 指定字重（如 Medium）。"""
+    key = (path, want)
+    if key in _FACE_INDEX:
+        return _FACE_INDEX[key]
+    idx, fallback = 0, None
     if path.lower().endswith(".ttc"):
-        for i in range(20):
+        for i in range(30):
             try:
                 name = " ".join(ImageFont.truetype(path, 20, index=i).getname())
             except OSError:
                 break
-            if " SC" in name or "SC " in name or "GB" in name:
+            sc = " SC" in name or "SC " in name or "GB" in name
+            if sc and fallback is None:
+                fallback = i
+            if sc and (not want or want in name):
                 idx = i
                 break
-    _FACE_INDEX[path] = idx
+        else:
+            idx = fallback or 0
+        if fallback is not None and idx == 0 and want:
+            idx = fallback
+    _FACE_INDEX[key] = idx
     return idx
 
 
 def font(size, kind="sans"):
-    path = FONT_FILES[kind]
-    key = (path, int(size))
+    path = FONT_FILES.get(kind) or FONT_FILES["sans"]
+    key = (path, int(size), kind)
     if key not in _FONT_CACHE:
-        _FONT_CACHE[key] = ImageFont.truetype(path, int(size), index=face_index(path))
+        _FONT_CACHE[key] = ImageFont.truetype(path, int(size), index=face_index(path, FACE_WANT.get(kind)))
     return _FONT_CACHE[key]
 
 
@@ -303,16 +336,18 @@ def load_panel(path, base_dir, w, h, label, desc, bw, focus, fill):
 
 # ---------- 漫画元素 ----------
 
-def bubble_outer(kind, w, h, vertical):
+def bubble_outer(kind, w, h, vertical, oval=False):
     """文字块尺寸 → 气泡外框尺寸（爆炸气泡和椭圆要留出更多空间）。"""
     if kind == "shout":
         return w * 1.55 + 24, h * 1.75 + 24
     if vertical:
         return w * 1.42 + 18, h * 1.22 + 24
+    if oval:
+        return w * 1.22 + 12, h * 1.38 + 10
     return w, h
 
 
-def bubble_shape(d, box, kind, vertical, ow, ink):
+def bubble_shape(d, box, kind, vertical, ow, ink, oval=False):
     x0, y0, x1, y1 = box
     if kind == "shout":  # 爆炸气泡：爽点、怒吼
         cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
@@ -323,14 +358,14 @@ def bubble_shape(d, box, kind, vertical, ow, ink):
             k = 1.0 if i % 2 == 0 else 0.84
             pts.append((cx + rx * k * math.cos(a), cy + ry * k * math.sin(a)))
         d.polygon(pts, fill="white", outline=ink, width=ow)
-    elif vertical:  # 竖排：长椭圆
+    elif vertical or oval:  # 竖排长椭圆 / 彩色风格的椭圆气泡
         d.ellipse(box, fill="white", outline=ink, width=ow)
     else:
         r = min((y1 - y0) / 2, (x1 - x0) / 2) * (1.0 if kind == "thought" else 0.9)
         d.rounded_rectangle(box, radius=r, fill="white", outline=ink, width=ow)
 
 
-def draw_tail(d, box, cell, kind, vertical, ow, ink, target=None):
+def draw_tail(d, box, cell, kind, vertical, ow, ink, target=None, oval=False):
     """从气泡指向说话人的尾巴；没给 target 时指向格子中心。"""
     if kind == "shout":
         return
@@ -339,14 +374,14 @@ def draw_tail(d, box, cell, kind, vertical, ow, ink, target=None):
     mx, my = (x0 + x1) / 2, (y0 + y1) / 2
     rx, ry = (x1 - x0) / 2, (y1 - y0) / 2
     below = cy > my
-    if vertical:
+    if vertical or oval:
         bx = min(max(cx, mx - rx * 0.3), mx + rx * 0.3)
         dy = ry * math.sqrt(max(0.0, 1 - ((bx - mx) / rx) ** 2))
         edge = my + dy if below else my - dy
     else:
         bx = min(max(cx, x0 + 30), x1 - 30)
         edge = y1 if below else y0
-    tip = (bx + (cx - bx) * 0.25, edge + (32 if below else -32))
+    tip = (bx + (cx - bx) * 0.25, edge + ((26 if oval else 32) if below else -(26 if oval else 32)))
     if kind == "thought":
         for i, r in enumerate((8, 5)):
             t = (i + 1) / 3
@@ -355,7 +390,8 @@ def draw_tail(d, box, cell, kind, vertical, ow, ink, target=None):
             d.ellipse((px - r, py - r, px + r, py + r), fill="white", outline=ink, width=max(2, ow - 1))
         return
     inset = 3 if below else -3
-    base = [(bx - 12, edge - inset), (bx + 12, edge - inset)]
+    half_w = 8 if oval else 12
+    base = [(bx - half_w, edge - inset), (bx + half_w, edge - inset)]
     d.polygon(base + [tip], fill="white")
     d.line([base[0], tip, base[1]], fill=ink, width=ow, joint="curve")
 
@@ -452,6 +488,8 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
     pad = max(10, cw * 0.035)
     vertical, ink = st["vertical"], st["ink"]
+    txt = st.get("text", ink)
+    oval = st.get("bubble") == "oval" and not vertical
     placed = stack.setdefault("_placed", [])
     for it in items:
         kind = it.get("type", "speech")
@@ -470,29 +508,29 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
             lh = line_h(f) * 1.12
             tw, th = max(text_w(d, ln, f) for ln in lines), lh * len(lines)
             tw, th = tw + f.size * 1.5, th + f.size
-        ow_, oh_ = bubble_outer(kind, tw, th, vertical)
+        ow_, oh_ = bubble_outer(kind, tw, th, vertical, oval)
         if it.get("at"):  # 精确位置：气泡中心在格子内的比例坐标
             box = at_box(cell, it["at"], ow_, oh_)
         else:
             box = place_box(cell, it.get("pos"), ow_, oh_, pad, stack, vertical)
             box = avoid_overlap(box, placed, cell, pad)
         placed.append(box)
-        bubble_shape(d, box, kind, vertical, st["bubble_line"], ink)
-        draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink, frac_point(cell, it.get("tail")))
+        bubble_shape(d, box, kind, vertical, st["bubble_line"], ink, oval)
+        draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink, frac_point(cell, it.get("tail")), oval)
         mx, my = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
         if vertical:
-            draw_vertical(d, mx + tw / 2, my - th / 2, cols, f, ink)
+            draw_vertical(d, mx + tw / 2, my - th / 2, cols, f, txt)
         else:
             y = my - lh * len(lines) / 2
             for ln in lines:
-                d.text((mx, y), ln, font=f, fill=ink, anchor="ma")
+                d.text((mx, y), ln, font=f, fill=txt, anchor="ma")
                 y += lh
 
 
 def draw_caption(canvas, cell, text, base_size, st):
     """旁白框：贴在格子角上。横排写在左上；竖排写在右上，和日漫一样。"""
     d = ImageDraw.Draw(canvas)
-    f = font(base_size * 0.82, st["text_font"])
+    f = font(base_size * 0.86, st.get("caption_font", st["text_font"]))
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
     p = base_size * 0.4
     right = st["caption_pos"].endswith("right")
@@ -506,33 +544,42 @@ def draw_caption(canvas, cell, text, base_size, st):
     bw_, bh = tw + p * 2, th + p * 2
     x0 = cell[2] - bw_ if right else cell[0]
     box = (x0, cell[1], x0 + bw_, cell[1] + bh)
-    d.rectangle(box, fill=st["caption_fill"], outline=st["ink"], width=max(2, st["border"] - 1))
+    d.rectangle(box, fill=st["caption_fill"], outline=st["ink"], width=max(1, int(st["border"] - 0.5)))
     if st["vertical"]:
         draw_vertical(d, box[2] - p, box[1] + p, cols, f, st["ink"])
     else:
         y = box[1] + p
         for ln in lines:
-            d.text((box[0] + p, y), ln, font=f, fill=st["ink"])
+            d.text((box[0] + p, y), ln, font=f, fill=st.get("text", st["ink"]))
             y += lh
     return (bw_ if st["vertical"] else bh), ("right" if right else "left")
 
 
 def draw_sfx(canvas, cell, sfx, base_size, st):
-    """音效字：大号描边手写感字体，略微倾斜。"""
+    """音效字：手写感字体，一个字一个字地错落、旋转、大小不一，像手绘拟声词。"""
     text = sfx.get("text") if isinstance(sfx, dict) else str(sfx)
     pos = sfx.get("pos", "middle-right") if isinstance(sfx, dict) else "middle-right"
     fill = sfx.get("color", st["sfx_fill"]) if isinstance(sfx, dict) else st["sfx_fill"]
     if not text:
         return
-    size = base_size * 2.0
-    f = font(size, "sans")
-    tmp = ImageDraw.Draw(canvas)
-    tw = text_w(tmp, text, f) + 30
-    th = line_h(f) + 30
-    layer = Image.new("RGBA", (int(tw), int(th)), (0, 0, 0, 0))
-    ld = ImageDraw.Draw(layer)
-    ld.text((15, 10), text, font=f, fill=fill, stroke_width=max(3, int(size / 12)), stroke_fill=st["sfx_stroke"])
-    layer = layer.rotate(8, expand=True, resample=Image.BICUBIC)
+    size = base_size * 2.1
+    chars = [c for c in text if c.strip()]
+    pieces = []
+    for k, c in enumerate(chars):
+        f = font(size * (1.12 if k == 0 else (0.92 + 0.12 * ((k * 7) % 3) / 2)), st.get("sfx_font", "sans"))
+        w_ = int(f.size * 1.5)
+        lay = Image.new("RGBA", (w_, w_), (0, 0, 0, 0))
+        ImageDraw.Draw(lay).text((w_ / 2, w_ / 2), c, font=f, fill=fill, anchor="mm",
+                                 stroke_width=max(3, int(f.size / 10)), stroke_fill=st["sfx_stroke"])
+        angle = (-12, 9, -5, 12, -8)[k % 5]
+        pieces.append(lay.rotate(angle, expand=True, resample=Image.BICUBIC))
+    step = size * 0.82
+    tw = int(step * (len(pieces) - 1) + max(p.width for p in pieces))
+    th = int(max(p.height for p in pieces) + size * 0.5)
+    layer = Image.new("RGBA", (tw, th), (0, 0, 0, 0))
+    for k, pc in enumerate(pieces):
+        dy = int(size * (0.0, 0.22, 0.05, 0.3, 0.12)[k % 5])
+        layer.paste(pc, (int(k * step), dy), pc)
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
     xs = {"left": 0.05, "center": 0.5, "right": 0.95}
     ys = {"top": 0.08, "middle": 0.5, "bottom": 0.92}
@@ -682,6 +729,31 @@ TEMPLATES = {
             ([0, .72, 1, 1], "box", None),
         ],
     },
+    "s-bust": {
+        "name": "半身压底",
+        "use": "顶部宽景 → 两格并排 → 底部：左边两个特写小格、右边一格，中间一个大的半身人物压在它们之间，下半身被页面底边切掉。人物的情绪时刻（紧张、愣住、下决心）",
+        "panels": [
+            ([0, 0, 1, .22], "box", None),
+            ([0, .24, .49, .56], "box", None),
+            ([.51, .24, 1, .56], "box", None),
+            ([0, .6, .27, .78], "box", None),
+            ([0, .8, .27, 1], "box", None),
+            ([.73, .6, 1, 1], "box", None),
+            ([.14, .5, .86, 1.1], "sticker", None),
+        ],
+    },
+    "s-fly": {
+        "name": "飞出画面",
+        "use": "顶部三个小格（左右留白）→ 一个横跨整页的大动作人物 + 四周速度线和飞出去的物件 → 底部一个大格，人物的脚压在它上面。摔倒、扑出去、被撞飞",
+        "panels": [
+            ([.06, 0, .36, .19], "box", None),
+            ([.37, 0, .66, .19], "box", None),
+            ([.67, 0, .96, .19], "box", None),
+            ([-.04, .17, 1.04, .66], "sticker", "speed"),
+            ([.1, .62, 1, 1], "box", None),
+            ([.12, .66, .5, .82], "inset", None),
+        ],
+    },
     "s-pop": {
         "name": "出格反应",
         "use": "四格叙事，最后一个人物从右下角“跳出”格子压在边框上做夸张反应。喜剧的吐槽、震惊、社死",
@@ -815,7 +887,7 @@ def cutout(img, tol=38):
     """把纯色背景（白 / 奶油色等）抠掉：从图像四边往里“灌水”，和背景色接近的连通区域变透明。"""
     img = img.convert("RGB")
     small = img.copy()
-    small.thumbnail((640, 640))
+    small.thumbnail((1100, 1100))
     w, h = small.size
     marker = (255, 0, 255)
     work = small.copy()
@@ -832,28 +904,33 @@ def cutout(img, tol=38):
             if wp[x, y] == marker:
                 mp[x, y] = 0
     mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
-    mask = mask.resize(img.size, Image.LANCZOS)
+    mask = mask.filter(ImageFilter.MinFilter(3))           # 往里收一圈，去掉背景色的毛边
+    mask = mask.resize(img.size, Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.2))  # 边缘柔化
     bbox = mask.point(lambda v: 255 if v > 128 else 0).getbbox()
     out = img.convert("RGBA")
     out.putalpha(mask)
     return out.crop(bbox) if bbox else out
 
 
-def paste_sticker(canvas, img, slot, anchor="bottom", outline=10):
-    """贴纸人物：抠图后等比放进格子（不裁切），加白色描边和淡阴影，压在其他格子上面。"""
+def paste_sticker(canvas, img, slot, anchor="bottom", outline=0, shadow=False):
+    """贴纸人物：抠图后等比放进格子（不裁切），直接压在其他格子上面。
+    参考图里的人物是直接画在纸面上的，所以默认不加白描边和阴影；格子可以超出页面边缘（出血），人物会被页面边缘切掉。"""
     x0, y0, x1, y1 = slot["box"]
     bw_, bh = x1 - x0, y1 - y0
     scale = min(bw_ / img.width, bh / img.height)
     img = img.resize((max(1, int(img.width * scale)), max(1, int(img.height * scale))), Image.LANCZOS)
     px = x0 + (bw_ - img.width) // 2
     py = y1 - img.height if anchor == "bottom" else (y0 if anchor == "top" else y0 + (bh - img.height) // 2)
-    pad = outline + 12
-    a = Image.new("L", (img.width + pad * 2, img.height + pad * 2), 0)
-    a.paste(img.getchannel("A"), (pad, pad))
-    ring = a.filter(ImageFilter.MaxFilter(outline * 2 + 1))
-    shadow = ring.filter(ImageFilter.GaussianBlur(8)).point(lambda v: int(v * 0.35))
-    canvas.paste((40, 30, 25), (px - pad + 6, py - pad + 8), shadow)
-    canvas.paste((255, 255, 255), (px - pad, py - pad), ring)
+    if outline or shadow:
+        pad = outline + 12
+        a = Image.new("L", (img.width + pad * 2, img.height + pad * 2), 0)
+        a.paste(img.getchannel("A"), (pad, pad))
+        ring = a.filter(ImageFilter.MaxFilter(outline * 2 + 1)) if outline else a
+        if shadow:
+            sh = ring.filter(ImageFilter.GaussianBlur(8)).point(lambda v: int(v * 0.3))
+            canvas.paste((40, 30, 25), (px - pad + 6, py - pad + 8), sh)
+        if outline:
+            canvas.paste((255, 255, 255), (px - pad, py - pad), ring)
     canvas.paste(img, (px, py), img)
 
 
@@ -894,7 +971,7 @@ def paste_free(canvas, img, slot, feather=0.07):
     canvas.paste(img, box[:2], mask)
 
 
-def draw_speedlines(canvas, slot, ink):
+def draw_speedlines(canvas, slot, ink, weight=1.0):
     """放射速度线：从格子边缘往中心收，中间留给人物；斜切格按形状裁掉多余部分。"""
     box = slot["box"]
     layer = Image.new("RGBA", (box[2] - box[0], box[3] - box[1]), (0, 0, 0, 0))
@@ -909,7 +986,7 @@ def draw_speedlines(canvas, slot, ink):
         ty = ((y1 - cy) / dy if dy > 0 else (y0 - cy) / dy) if abs(dy) > 1e-6 else 1e9
         r_edge = min(tx, ty)
         r_in = r_edge * (0.62 + 0.18 * ((k * 7) % 5) / 4)
-        half = 2.5 + (k % 3) * 1.5
+        half = (2.5 + (k % 3) * 1.5) * weight
         px, py = -dy, dx
         ox, oy = cx + dx * r_edge, cy + dy * r_edge
         d.polygon([(ox + px * half, oy + py * half), (ox - px * half, oy - py * half),
@@ -999,7 +1076,7 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
     canvas = Image.new("RGB", (W, H), st["bg"])
     d = ImageDraw.Draw(canvas)
     if title:
-        f = font(56, st["title_font"])
+        f = font(st.get("title_size", 52), st["title_font"])
         while text_w(d, title, f) > W - 2 * st["margin"] and f.size > 28:
             f = font(f.size - 2, st["title_font"])
         d.text((W / 2, st["margin"] + TITLE_BAND / 2 - 8), title, font=f, fill=st["ink"], anchor="mm")
@@ -1033,8 +1110,8 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
                     print(f"  · 找不到图片 {path}，先用占位图", file=sys.stderr)
                 stk = placeholder_sticker(w, h, f"格 {i} · 贴纸人物", p.get("scene", ""), fill)
             if p.get("speedlines", slot["fx"] == "speed"):
-                draw_speedlines(canvas, slot, st["ink"])
-            paste_sticker(canvas, stk, slot, p.get("anchor", "bottom"), int(p.get("outline", 10)))
+                draw_speedlines(canvas, slot, st["ink"], st.get("speed_weight", 1.0))
+            paste_sticker(canvas, stk, slot, p.get("anchor", "bottom"), int(p.get("outline", 0)), bool(p.get("shadow", False)))
             continue
         img, ok = load_panel(p.get("image"), base_dir, w, h, label, p.get("scene", ""), bw,
                              tuple(p.get("focus", (0.5, 0.5))), fill)
@@ -1042,16 +1119,16 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
         if kind == "free":
             paste_free(canvas, img, slot, float(p.get("feather", 0.07)))
             if p.get("speedlines", slot["fx"] == "speed"):
-                draw_speedlines(canvas, slot, st["ink"])
+                draw_speedlines(canvas, slot, st["ink"], st.get("speed_weight", 1.0))
             continue
         if kind == "inset":  # 插入小格外圈留一道底色，像贴在大格上
             ring = max(8, st["gutter"] * 0.6)
             d.rectangle((box[0] - ring, box[1] - ring, box[2] + ring, box[3] + ring), fill=st["bg"])
         canvas.paste(img, box[:2], poly_mask(slot))
         if p.get("speedlines", slot["fx"] == "speed"):
-            draw_speedlines(canvas, slot, st["ink"])
+            draw_speedlines(canvas, slot, st["ink"], st.get("speed_weight", 1.0))
         pts = slot["poly"]
-        d.line(pts + [pts[0], pts[1]], fill=st["ink"], width=st["border"], joint="curve")
+        d.line(pts + [pts[0], pts[1]], fill=st["ink"], width=max(1, round(st["border"])), joint="curve")
 
     for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面（草稿模式不画字）
         if spec.get("_draft"):
@@ -1072,7 +1149,7 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
         draw_dialogue(canvas, box, p.get("dialogue", []), base_size, stack, st)
 
     if footer:
-        f = font(38, st["title_font"])
+        f = font(32, st["title_font"])
         d.text((W / 2, H - st["margin"] - FOOTER_BAND / 2 + 6), footer, font=f, fill=st["ink"], anchor="mm")
     page_no = spec.get("page_no")
     if page_no:  # 页码：右下角小字

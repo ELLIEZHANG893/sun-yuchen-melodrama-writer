@@ -80,6 +80,7 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 - `examples/persona-cards.md`：深圳都市故事里江遥、梁屿的人设卡样例。
 - `references/character-design.md`：角色差异化（八个设计轴、避开 AI 默认脸、角色登记表）和夸张表情词库。
 - `examples/cast-registry.md`：角色登记表样例。
+- `fonts/ZCOOLKuaiLe-Regular.ttf`：站酷快乐体（SIL Open Font License，见 `fonts/OFL.txt`），用于拟声词、旁白和标题。
 - `references/feedback-log.md`：用户反馈日志和生效中的规则摘要，skill 每次使用先读，收到新反馈时自迭代。
 - `references/review.md`：交付前 review 清单（设定、章节、人设、提示词、出图、排版、修改影响面）。
 - `references/foreshadow-and-comedy.md`：伏笔清单的设计与回收、让故事好笑的六个手法。

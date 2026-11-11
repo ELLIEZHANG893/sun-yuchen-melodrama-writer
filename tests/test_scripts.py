@@ -27,6 +27,9 @@ def test_layouts_fit_on_canvas(layout, mode):
     assert panels
     for p in panels:
         x0, y0, x1, y1 = p["box"]
+        if p["kind"] == "sticker":  # 贴纸人物可以出血（超出页面边缘，被页面切掉）
+            assert x0 < x1 and y0 < y1 and x1 > 0 and y0 < rv.CANVAS_H
+            continue
         assert 0 <= x0 < x1 <= rv.CANVAS_W
         assert 0 <= y0 < y1 <= rv.CANVAS_H
 
