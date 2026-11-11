@@ -40,19 +40,22 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 
 ## 安装
 
-Codex：
+这个 skill 就是一个带 `SKILL.md` 的文件夹，支持 Agent Skills 格式的工具都能用，只是放的位置不同。文件夹名统一用 `supereasy-melodrama-writer`。
 
-```bash
-git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.codex/skills/short-drama-serial-writer
-```
+| 工具 | 安装方式 |
+|---|---|
+| Claude Code | `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.claude/skills/supereasy-melodrama-writer` |
+| Codex | `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.codex/skills/supereasy-melodrama-writer` |
+| WorkBuddy | 「技能管理」→「通过 URL 导入」，填仓库地址；或 `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.workbuddy/skills/supereasy-melodrama-writer` |
+| 千问办公（QwenWork） | 在对话里说“请帮我把 https://github.com/ELLIEZHANG893/supereasy-melodrama-writer 下载并放到 ~/.qwenworkcn/skills/ 目录”；或左侧「扩展」→「技能」→「安装技能」上传；或 `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.qwenworkcn/skills/supereasy-melodrama-writer` |
+| Qwen Code | `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.qwen/skills/supereasy-melodrama-writer` |
+| CodeBuddy | `git clone https://github.com/ELLIEZHANG893/supereasy-melodrama-writer.git ~/.codebuddy/skills/supereasy-melodrama-writer`（注意和 WorkBuddy 的目录不同） |
 
-Claude Code：
+装好后重新打开工具即可。一般会根据你的请求自动调用；在 Claude Code、Qwen Code 里也可以输入 `/supereasy-melodrama-writer` 手动调用。
 
-```bash
-git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.claude/skills/short-drama-serial-writer
-```
-
-重新打开后即可使用。
+- 想用某个分支的版本，在 `git clone` 后面加 `-b 分支名`。
+- 写小说、出图像提示词在任何工具里都能用；封面和漫画排版要运行 Python 脚本，需要工具能执行命令，并安装 Pillow：`pip install pillow`。
+- 千问 App 这类手机聊天应用目前不能安装自定义 skill，可以把 `SKILL.md` 的内容当作指令粘贴进对话，但手册和排版脚本用不上。
 
 ## 示例
 
