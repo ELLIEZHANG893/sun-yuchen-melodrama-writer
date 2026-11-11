@@ -43,7 +43,9 @@ python scripts/render_visuals.py cover --image cover-a.png \
 
 B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选定后写进 `story-bible.md`。
 
-## 第 1 章四宫格分镜（2x2，彩色）
+## 第 1 章 4 格分镜（彩色，自由分格 `4-inset`）
+
+本章结尾是配型报告的揭露，所以选“插入特写”模板：第 4 格是压在第 3 格左下角的特写小格。各格比例来自 `python scripts/render_visuals.py sizes --layout 4-inset`。
 
 先确认画风（第一次做漫画时）：
 
@@ -58,19 +60,19 @@ B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选�
 格1 起｜中景｜病房，母亲把笔硬塞进林晚手里，指甲掐进她手背；病床上的年轻男人扭头看墙
   气泡：母亲「签吧，就一个字的事。」（右上）
   旁白：市医院 肾内科病房
-  提示词（英）：[风格前缀], [林晚外观卡], [周美芬外观卡], the mother forcing a pen into Lin Wan's hand, nails digging into the back of her hand, a young man in a hospital bed turning his face to the wall, crowded hospital ward, medium shot, empty space at the top right for a speech bubble, aspect ratio 3:5, no text, no letters, no speech bubbles, no watermark
+  提示词（英）：[风格前缀], [林晚外观卡], [周美芬外观卡], the mother forcing a pen into Lin Wan's hand, nails digging into the back of her hand, a young man in a hospital bed turning his face to the wall, crowded hospital ward, medium shot, empty space at the top right for a speech bubble, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark
 
 格2 承｜近景｜母亲一巴掌拍在床头柜上，水杯跳起；林晚低头不动
   气泡（爆炸）：母亲「我养你二十七年，你跟我讲条件？」（左下）
   音效：啪！（右上）
   提示词（英）：……furious mother slamming her palm on the bedside table, a water glass jumping, Lin Wan standing still with her head down, close shot, low angle on the mother, empty space at the bottom left……
 
-格3 转｜中景｜走廊尽头，顾衍把牛皮纸文件袋递给林晚，手却没有松开
+格3 转｜大场景格｜走廊尽头，顾衍把牛皮纸文件袋递给林晚，手却没有松开（人物放右侧和上方，左下角会被第 4 格盖住）
   气泡：顾衍「有没有人跟你提过……你是领养的？」（左上）
-  气泡（内心）：林晚「我是我妈亲生的。」（右下）
+  气泡（内心）：林晚「我是我妈亲生的。」（右上）
   提示词（英）：……[顾衍外观卡] handing a kraft paper envelope to Lin Wan but not letting go, end of a quiet hospital corridor, window light, medium shot, empty space at the top left and bottom right……
 
-格4 合（钩子）｜特写｜林晚手里报告的最后一页，背景虚化处母亲站在病房门口，脸色一点点发白
+格4 合（钩子）｜插入小格·特写｜林晚手里报告的最后一页，背景虚化处母亲站在病房门口，脸色一点点发白
   旁白：无生物学亲缘关系
   气泡：母亲「谁让你们查这个的？」（右下）
   提示词（英）：……close-up of a hospital report page in Lin Wan's hands, in the blurred background the mother standing at the ward door turning pale, tense atmosphere, close-up, empty space at the bottom right……

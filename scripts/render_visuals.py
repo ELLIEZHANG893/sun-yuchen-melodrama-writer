@@ -17,7 +17,8 @@
     python scripts/render_visuals.py comic visuals/ep01-comic.json --bw       # 强制黑白风格
 
     # 查看某种版式每一格的像素尺寸和建议出图比例
-    python scripts/render_visuals.py sizes --layout 3x3 --mode bw
+    python scripts/render_visuals.py layouts                      # 列出自由分格模板
+    python scripts/render_visuals.py sizes --layout 4-splash      # 每格尺寸、比例、是否无框
 """
 import argparse
 import json
@@ -26,7 +27,7 @@ import os
 import sys
 
 try:
-    from PIL import Image, ImageDraw, ImageEnhance, ImageFont, ImageOps
+    from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 except ImportError:
     sys.exit("需要 Pillow：pip install pillow")
 
@@ -272,11 +273,11 @@ def placeholder(w, h, label, desc="", bw=False, at=0.32, fill=None):
         d = ImageDraw.Draw(img)
         for i in range(-h, w, 28):
             d.line([(i, 0), (i + h, h)], fill=(200, 210, 226), width=2)
-    f1 = font(max(22, w * 0.09))
+    f1 = font(max(20, min(w, h * 0.8) * 0.09))
     d.text((w / 2, h * at), label, font=f1, fill=(90, 90, 90), anchor="mm",
            stroke_width=3, stroke_fill=fill or (255, 255, 255))
     if desc:
-        f2 = font(max(14, w * 0.045))
+        f2 = font(max(14, min(w, h * 0.8) * 0.045))
         lines = wrap(d, desc, f2, w * 0.82)[:8]
         y = h * (at + 0.1)
         for ln in lines:
@@ -384,11 +385,30 @@ def place_box(cell, pos, bw_, bh, pad, stack, vertical):
     return (x, y, x + bw_, y + bh)
 
 
+def avoid_overlap(box, placed, cell, pad):
+    """和同一格里已经放好的气泡重叠时，往下（下半格的往上）挪开；挪不开就保持原位。"""
+    def hit(a, b):
+        return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
+    x0, y0, x1, y1 = box
+    h = y1 - y0
+    down = (y0 + y1) / 2 < (cell[1] + cell[3]) / 2
+    for _ in range(len(placed) + 1):
+        other = next((o for o in placed if hit((x0, y0, x1, y1), o)), None)
+        if not other:
+            break
+        y0 = other[3] + pad * 0.5 if down else other[1] - pad * 0.5 - h
+        if y0 < cell[1] or y0 + h > cell[3]:
+            return box
+        y1 = y0 + h
+    return (x0, y0, x1, y1)
+
+
 def draw_dialogue(canvas, cell, items, base_size, stack, st):
     d = ImageDraw.Draw(canvas)
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
     pad = max(10, cw * 0.035)
     vertical, ink = st["vertical"], st["ink"]
+    placed = stack.setdefault("_placed", [])
     for it in items:
         kind = it.get("type", "speech")
         text = it.get("text", "").strip()
@@ -405,6 +425,8 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
             tw, th = tw + f.size * 1.5, th + f.size
         ow_, oh_ = bubble_outer(kind, tw, th, vertical)
         box = place_box(cell, it.get("pos"), ow_, oh_, pad, stack, vertical)
+        box = avoid_overlap(box, placed, cell, pad)
+        placed.append(box)
         bubble_shape(d, box, kind, vertical, st["bubble_line"], ink)
         draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink)
         mx, my = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
@@ -475,30 +497,114 @@ def draw_sfx(canvas, cell, sfx, base_size, st):
 
 # ---------- 版式 ----------
 
-def parse_layout(s):
+# 自由分格模板（彩色风格的默认版式），坐标是内容区的比例 [x0, y0, x1, y1]。
+# 列表顺序 = 阅读顺序。kind：box 有框格；free 无框大格（画面羽化融进底色）；inset 压在别的格子上的插入小格。
+# fx：speed 加放射速度线。
+TEMPLATES = {
+    "4-hero": {
+        "name": "主角大格",
+        "use": "四格：全景 → 两格推进 → 无框大格放主角的反应脸。结尾是一张震惊 / 决绝的脸时用",
+        "panels": [
+            ([0, 0, 1, .24], "box", None),
+            ([0, .24, .42, .50], "box", None),
+            ([.42, .24, 1, .50], "box", None),
+            ([0, .50, 1, 1], "free", None),
+        ],
+    },
+    "4-splash": {
+        "name": "动作爆发",
+        "use": "四格：三个小格蓄力 → 无框大格 + 速度线放动作。结尾是一个动作（巴掌、摔门、冲出去）时用",
+        "panels": [
+            ([0, 0, 1 / 3, .28], "box", None),
+            ([1 / 3, 0, 2 / 3, .28], "box", None),
+            ([2 / 3, 0, 1, .28], "box", None),
+            ([0, .28, 1, 1], "free", "speed"),
+        ],
+    },
+    "4-inset": {
+        "name": "插入特写",
+        "use": "四格：两格 → 大场景格 → 压在大格角上的特写小格。结尾是一个物件或一句话的揭露时用",
+        "panels": [
+            ([0, 0, .58, .32], "box", None),
+            ([.58, 0, 1, .32], "box", None),
+            ([0, .32, 1, 1], "box", None),
+            ([.05, .63, .52, .95], "inset", None),
+        ],
+    },
+    "9-hero": {
+        "name": "情绪大格",
+        "use": "九格：全景 → 两格 → 中间无框主角大格，左右压着三个特写小格 → 横条 → 宽格钩子。情绪戏为主时用",
+        "panels": [
+            ([0, 0, 1, .15], "box", None),
+            ([0, .15, .40, .33], "box", None),
+            ([.40, .15, 1, .33], "box", None),
+            ([0, .345, .29, .50], "inset", None),
+            ([0, .515, .29, .67], "inset", None),
+            ([0, .33, 1, .69], "free", None),
+            ([.71, .345, 1, .67], "inset", None),
+            ([0, .69, 1, .81], "box", None),
+            ([0, .81, 1, 1], "box", None),
+        ],
+    },
+    "9-splash": {
+        "name": "动作九格",
+        "use": "九格：三小格 → 大小错落三格 → 无框动作大格 + 速度线 → 插入特写 → 宽格钩子。动作戏为主时用",
+        "panels": [
+            ([0, 0, 1 / 3, .17], "box", None),
+            ([1 / 3, 0, 2 / 3, .17], "box", None),
+            ([2 / 3, 0, 1, .17], "box", None),
+            ([0, .17, .62, .42], "box", None),
+            ([.62, .17, 1, .295], "box", None),
+            ([.62, .295, 1, .42], "box", None),
+            ([0, .42, 1, .72], "free", "speed"),
+            ([.04, .685, .44, .83], "inset", None),
+            ([0, .72, 1, 1], "box", None),
+        ],
+    },
+}
+KIND_LABEL = {"box": "", "free": " · 无框", "inset": " · 插入小格"}
+
+
+def parse_grid(s):
     try:
         cols, rows = (int(v) for v in s.lower().replace("×", "x").split("x"))
         assert 1 <= cols <= 4 and 1 <= rows <= 6
         return cols, rows
     except Exception:
-        sys.exit(f"版式写法是 列x行，例如 2x2、3x3、1x4，收到：{s}")
+        names = "、".join(TEMPLATES)
+        sys.exit(f"版式写法：自由分格模板（{names}），或规整网格 列x行（如 2x2、3x3、1x4），收到：{s}")
 
 
-def grid_cells(cols, rows, W, H, has_title, has_footer, st):
+def layout_panels(layout, W, H, has_title, has_footer, st):
+    """返回 [{box, kind, fx}]，顺序即阅读顺序。"""
     m, g = st["margin"], st["gutter"]
     top = m + (TITLE_BAND if has_title else 0)
     bottom = H - m - (FOOTER_BAND if has_footer else 0)
+    if layout in TEMPLATES:
+        X0, Y0, CW, CH = m, top, W - 2 * m, bottom - top
+        out = []
+        for (fx0, fy0, fx1, fy1), kind, fx in TEMPLATES[layout]["panels"]:
+            if st["rtl"]:
+                fx0, fx1 = 1 - fx1, 1 - fx0
+            x0, y0, x1, y1 = X0 + fx0 * CW, Y0 + fy0 * CH, X0 + fx1 * CW, Y0 + fy1 * CH
+            if kind != "inset":  # 有框格和无框格之间留格距；外边缘对齐页边
+                x0 += g / 2 if fx0 > 0 else 0
+                y0 += g / 2 if fy0 > 0 else 0
+                x1 -= g / 2 if fx1 < 1 else 0
+                y1 -= g / 2 if fy1 < 1 else 0
+            out.append({"box": tuple(int(round(v)) for v in (x0, y0, x1, y1)), "kind": kind, "fx": fx})
+        return out
+    cols, rows = parse_grid(layout)
     cw = (W - 2 * m - (cols - 1) * g) / cols
     ch = (bottom - top - (rows - 1) * g) / rows
-    cells = []
+    out = []
     for r in range(rows):
         row = []
         for c in range(cols):
-            x = m + c * (cw + g)
-            y = top + r * (ch + g)
-            row.append(tuple(int(round(v)) for v in (x, y, x + cw, y + ch)))
-        cells += row[::-1] if st["rtl"] else row
-    return cells
+            x, y = m + c * (cw + g), top + r * (ch + g)
+            row.append({"box": tuple(int(round(v)) for v in (x, y, x + cw, y + ch)), "kind": "box", "fx": None})
+        out += row[::-1] if st["rtl"] else row
+    return out
 
 
 def nearest_ratio(w, h):
@@ -512,37 +618,81 @@ def resolve_style(mode, overrides=None):
     return st
 
 
+def mix(c1, c2, t):
+    a, b = ImageColor.getrgb(c1), ImageColor.getrgb(c2)
+    return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
+
+
+def paste_free(canvas, img, box):
+    """无框格：四边羽化，画面像直接画在纸上。"""
+    w, h = box[2] - box[0], box[3] - box[1]
+    f = int(min(w, h) * 0.07)
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).rectangle((f, f, w - f, h - f), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(f / 2))
+    canvas.paste(img, box[:2], mask)
+
+
+def draw_speedlines(canvas, box, ink):
+    """放射速度线：从格子边缘往中心收，中间留给人物。"""
+    d = ImageDraw.Draw(canvas)
+    x0, y0, x1, y1 = box
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    n = 36
+    for k in range(n):
+        a = 2 * math.pi * k / n + 0.07 * math.sin(k * 2.3)
+        dx, dy = math.cos(a), math.sin(a)
+        tx = ((x1 - cx) / dx if dx > 0 else (x0 - cx) / dx) if abs(dx) > 1e-6 else 1e9
+        ty = ((y1 - cy) / dy if dy > 0 else (y0 - cy) / dy) if abs(dy) > 1e-6 else 1e9
+        r_edge = min(tx, ty)
+        r_in = r_edge * (0.62 + 0.18 * ((k * 7) % 5) / 4)
+        half = 2.5 + (k % 3) * 1.5
+        px, py = -dy, dx
+        ox, oy = cx + dx * r_edge, cy + dy * r_edge
+        d.polygon([(ox + px * half, oy + py * half), (ox - px * half, oy - py * half),
+                   (cx + dx * r_in, cy + dy * r_in)], fill=ink)
+
+
+def panel_size_text(i, p):
+    x0, y0, x1, y1 = p["box"]
+    return f"格 {i}｜{x1 - x0}×{y1 - y0}｜建议比例 {nearest_ratio(x1 - x0, y1 - y0)}{KIND_LABEL[p['kind']]}" + \
+        ("｜加速度线" if p["fx"] == "speed" else "")
+
+
+def cmd_layouts(a):
+    print("自由分格模板（彩色风格默认用这些，规整网格写 2x2、3x3、1x4）：")
+    for k, t in TEMPLATES.items():
+        print(f"  {k:9s} {t['name']}：{t['use']}")
+
+
 def cmd_sizes(a):
-    cols, rows = parse_layout(a.layout)
     st = resolve_style(a.mode)
-    x0, y0, x1, y1 = grid_cells(cols, rows, a.width, a.height, True, True, st)[0]
-    w, h = x1 - x0, y1 - y0
-    print(f"版式 {cols}列×{rows}行，{'黑白' if a.mode == 'bw' else '彩色'}风格，画布 {a.width}×{a.height}")
-    print(f"每格约 {w}×{h} 像素，出图建议比例 {nearest_ratio(w, h)}（脚本会自动裁切，比例接近即可）")
+    panels = layout_panels(a.layout, a.width, a.height, True, True, st)
+    print(f"版式 {a.layout}，{'黑白' if a.mode == 'bw' else '彩色'}风格，画布 {a.width}×{a.height}，共 {len(panels)} 格")
+    for i, p in enumerate(panels, 1):
+        print("  " + panel_size_text(i, p))
+    print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
 
 
 def cmd_comic(a):
     with open(a.spec, encoding="utf-8") as fh:
         spec = json.load(fh)
     base_dir = os.path.dirname(os.path.abspath(a.spec))
-    cols, rows = parse_layout(a.layout or spec.get("layout", "2x2"))
-    W, H = spec.get("canvas", [CANVAS_W, CANVAS_H])
     mode = "bw" if (a.bw or spec.get("mode", "color") == "bw") else "color"
     bw = mode == "bw"
     st = resolve_style(mode, spec.get("style"))
+    layout = a.layout or spec.get("layout") or ("4-inset" if not bw else "2x2")
+    W, H = spec.get("canvas", [CANVAS_W, CANVAS_H])
     title, footer = spec.get("title", ""), spec.get("footer", "")
+    slots = layout_panels(layout, W, H, bool(title), bool(footer), st)
     panels = spec.get("panels", [])
-    need = cols * rows
+    need = len(slots)
     if len(panels) != need:
-        print(f"  · 版式需要 {need} 格，分镜里有 {len(panels)} 格；多的忽略，少的补占位", file=sys.stderr)
+        print(f"  · 版式 {layout} 需要 {need} 格，分镜里有 {len(panels)} 格；多的忽略，少的补占位", file=sys.stderr)
         panels = (panels + [{}] * need)[:need]
 
     canvas = Image.new("RGB", (W, H), st["bg"])
-    cells = grid_cells(cols, rows, W, H, bool(title), bool(footer), st)
-    cw = cells[0][2] - cells[0][0]
-    base_size = min(40, max(20, cw * 0.07))
     d = ImageDraw.Draw(canvas)
-
     if title:
         f = font(56, st["title_font"])
         while text_w(d, title, f) > W - 2 * st["margin"] and f.size > 28:
@@ -550,26 +700,49 @@ def cmd_comic(a):
         d.text((W / 2, st["margin"] + TITLE_BAND / 2 - 8), title, font=f, fill=st["ink"], anchor="mm")
 
     palette = st.get("placeholder")
+    items = list(enumerate(zip(slots, panels), 1))
+    zorder = {"free": 0, "box": 1, "inset": 2}
+    items.sort(key=lambda it: zorder[it[1][0]["kind"]])  # 先铺无框大格，再有框格，最后插入小格
     found = 0
-    for i, (cell, p) in enumerate(zip(cells, panels), 1):
-        w, h = cell[2] - cell[0], cell[3] - cell[1]
+
+    for i, (slot, p) in items:  # 第一遍：画面和格框
+        box, kind = slot["box"], slot["kind"]
+        w, h = box[2] - box[0], box[3] - box[1]
         fill = palette[(i - 1) % len(palette)] if palette else None
-        img, ok = load_panel(p.get("image"), base_dir, w, h, f"格 {i}", p.get("scene", ""), bw,
+        if kind == "free" and fill:
+            fill = mix(fill, st["bg"], 0.45)
+        label = f"格 {i} · {nearest_ratio(w, h)}{KIND_LABEL[kind]}"
+        img, ok = load_panel(p.get("image"), base_dir, w, h, label, p.get("scene", ""), bw,
                              tuple(p.get("focus", (0.5, 0.5))), fill)
         found += ok
-        canvas.paste(img, cell[:2])
+        if kind == "free":
+            paste_free(canvas, img, box)
+            if slot["fx"] == "speed" or p.get("speedlines"):
+                draw_speedlines(canvas, box, st["ink"])
+            continue
+        if kind == "inset":  # 插入小格外圈留一道底色，像贴在大格上
+            ring = st["gutter"] * 0.6
+            d.rectangle((box[0] - ring, box[1] - ring, box[2] + ring, box[3] + ring), fill=st["bg"])
+        canvas.paste(img, box[:2])
+        if p.get("speedlines"):
+            draw_speedlines(canvas, box, st["ink"])
+        d.rectangle(box, outline=st["ink"], width=st["border"])
+
+    for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面
+        box = slot["box"]
+        w, h = box[2] - box[0], box[3] - box[1]
+        base_size = min(38, max(21, min(w, h * 0.9) * 0.075))
         stack = {}
         if p.get("caption"):
-            size_, side = draw_caption(canvas, cell, p["caption"], base_size, st)
+            size_, side = draw_caption(canvas, box, p["caption"], base_size, st)
             if st["vertical"]:
                 stack[("top", side)] = size_ + 4
             else:
                 for hz in ("left", "center", "right"):
                     stack[("top", hz)] = size_ + 6
         if p.get("sfx"):
-            draw_sfx(canvas, cell, p["sfx"], base_size, st)
-        draw_dialogue(canvas, cell, p.get("dialogue", []), base_size, stack, st)
-        ImageDraw.Draw(canvas).rectangle(cell, outline=st["ink"], width=st["border"])
+            draw_sfx(canvas, box, p["sfx"], base_size, st)
+        draw_dialogue(canvas, box, p.get("dialogue", []), base_size, stack, st)
 
     if footer:
         f = font(38, st["title_font"])
@@ -577,7 +750,7 @@ def cmd_comic(a):
 
     out = a.out or os.path.splitext(a.spec)[0] + ".png"
     canvas.save(out)
-    print(f"已生成 {out}（{cols}列×{rows}行，{'黑白' if bw else '彩色'}风格，{found}/{need} 格用了真实图片）")
+    print(f"已生成 {out}（版式 {layout}，{'黑白' if bw else '彩色'}风格，{found}/{need} 格用了真实图片）")
 
 
 def cmd_cover(a):
@@ -685,12 +858,14 @@ def main():
 
     m = sub.add_parser("comic", help="按分镜 JSON 排四宫格 / 九宫格 / 竖条漫画")
     m.add_argument("spec", help="分镜 JSON 文件")
-    m.add_argument("--layout", help="覆盖 JSON 里的版式，列x行，如 2x2、3x3、1x4")
+    m.add_argument("--layout", help="覆盖 JSON 里的版式：自由分格模板（4-hero、4-splash、4-inset、9-hero、9-splash）或网格 2x2、3x3、1x4")
     m.add_argument("--bw", action="store_true", help="强制黑白风格")
     m.add_argument("--out")
 
-    s = sub.add_parser("sizes", help="查看版式每格尺寸和建议出图比例")
-    s.add_argument("--layout", default="2x2")
+    sub.add_parser("layouts", help="列出自由分格模板和适用场景")
+
+    s = sub.add_parser("sizes", help="查看版式每格尺寸、建议出图比例和格子类型")
+    s.add_argument("--layout", default="4-inset")
     s.add_argument("--mode", choices=["color", "bw"], default="color")
     s.add_argument("--width", type=int, default=CANVAS_W)
     s.add_argument("--height", type=int, default=CANVAS_H)
@@ -698,6 +873,8 @@ def main():
     a = p.parse_args()
     if a.cmd == "sizes":
         return cmd_sizes(a)
+    if a.cmd == "layouts":
+        return cmd_layouts(a)
     setup_fonts(a.font, a.serif_font)
     {"cover": cmd_cover, "comic": cmd_comic}[a.cmd](a)
 
