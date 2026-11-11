@@ -43,8 +43,8 @@
         },
         {
           "speaker": "林晚",
-          "text": "我是我妈亲生的。",
-          "type": "thought",
+          "text": "我是……我妈亲生的。",
+          "type": "monologue",
           "pos": "bottom-left"
         }
       ]

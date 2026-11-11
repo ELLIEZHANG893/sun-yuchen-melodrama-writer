@@ -229,12 +229,13 @@ def vertical_block(cols, f):
     return w, h, step, gap
 
 
-def draw_vertical(d, x_right, y_top, cols, f, fill):
+def draw_vertical(d, x_right, y_top, cols, f, fill, stroke=0, stroke_fill="white"):
     _, _, step, gap = vertical_block(cols, f)
     for i, col in enumerate(cols):
         cx = x_right - f.size / 2 - i * (f.size + gap)
         for j, ch in enumerate(col):
-            d.text((cx, y_top + j * step + step / 2), ch, font=f, fill=fill, anchor="mm")
+            d.text((cx, y_top + j * step + step / 2), ch, font=f, fill=fill, anchor="mm",
+                   stroke_width=stroke, stroke_fill=stroke_fill)
 
 
 # ---------- 图片处理 ----------
@@ -403,6 +404,30 @@ def avoid_overlap(box, placed, cell, pad):
     return (x0, y0, x1, y1)
 
 
+def draw_monologue(d, cell, text, base_size, st, stack, placed, pad, pos):
+    f = font(base_size * 1.15, "sans")
+    cw, ch = cell[2] - cell[0], cell[3] - cell[1]
+    stroke = max(3, int(f.size / 7))
+    if st["vertical"]:
+        cols = vertical_columns(text, f, ch * 0.4)
+        tw, th, _, _ = vertical_block(cols, f)
+    else:
+        lines = wrap(d, text, f, cw * 0.6)
+        lh = line_h(f) * 1.1
+        tw, th = max(text_w(d, ln, f) for ln in lines), lh * len(lines)
+    bw_, bh = tw + stroke * 2, th + stroke * 2
+    box = place_box(cell, pos or "middle-left", bw_, bh, pad, stack, st["vertical"])
+    box = avoid_overlap(box, placed, cell, pad)
+    placed.append(box)
+    if st["vertical"]:
+        draw_vertical(d, box[2] - stroke, box[1] + stroke, cols, f, st["ink"], stroke, "white")
+    else:
+        y = box[1] + stroke
+        for ln in lines:
+            d.text((box[0] + stroke, y), ln, font=f, fill=st["ink"], stroke_width=stroke, stroke_fill="white")
+            y += lh
+
+
 def draw_dialogue(canvas, cell, items, base_size, stack, st):
     d = ImageDraw.Draw(canvas)
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
@@ -413,6 +438,9 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
         kind = it.get("type", "speech")
         text = it.get("text", "").strip()
         if not text:
+            continue
+        if kind == "monologue":  # 浮空独白：没有气泡和框，粗一点的字加白描边，直接浮在人物旁边
+            draw_monologue(d, cell, text, base_size, st, stack, placed, pad, it.get("pos"))
             continue
         f = font(base_size * (1.1 if kind == "shout" else 1.0), st["text_font"])
         if vertical:

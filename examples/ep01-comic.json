@@ -44,8 +44,8 @@
         {
           "speaker": "林晚",
           "text": "我是我妈亲生的。",
-          "type": "thought",
-          "pos": "top-right"
+          "type": "monologue",
+          "pos": "middle-right"
         }
       ]
     },

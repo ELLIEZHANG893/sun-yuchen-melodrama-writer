@@ -50,10 +50,54 @@
 英文描述串：Gu Yan, 30-year-old Chinese man, tall and lean, long face with a narrow chin and narrow eyes, short black hair with a side part, thin-framed glasses, white doctor's coat over a light blue shirt, blue ID badge on his chest
 ```
 
-定妆表提示词（每人一张，以林晚为例）：
+## 角色表演卡
+
+三个人画法完全一样，靠演法区分性格：林晚“收着”，母亲“放着”，顾衍“冷着”。同样是生气，三个人的脸完全不同。
 
 ```text
-[彩色画风前缀], [彩色人物画法后缀], character reference sheet of [林晚英文描述串], front view, three-quarter view and full-body view, plus four expressions: calm, angry, crying, surprised, plain background, consistent character design, no text, no letters, no watermark
+【表演卡】林晚
+性格关键词：隐忍、精明、倔强
+眼型眉形：眼尾上挑，眉头微皱
+默认体态：背挺直，双手在身前攥着包带｜standing straight, both hands gripping her bag strap in front of her
+招牌小动作：拇指摩挲手表｜rubbing her watch with her thumb；把头发别到耳后｜tucking her hair behind her ear
+表情演法：
+  生气｜不提高声音的冷眼，嘴唇抿紧｜cold glare without raising her voice, lips pressed tight
+  委屈｜咬住下唇，眼眶红但眼泪不掉｜biting her lower lip, eyes brimming with tears that do not fall
+  震惊｜瞳孔缩小，手指收紧｜pupils shrinking, fingers tightening
+  反击（爽点）｜平静地抬眼直视，嘴角一点点上扬｜calmly lifting her eyes to stare straight ahead, the faintest smile
+专属演出：眼睛特写 + 裂纹背景｜extreme close-up of the eyes only, cracked glass pattern background
+网点 / 配色倾向：中性；爽点格眼中高光增多
+
+【表演卡】周美芬（母亲）
+性格关键词：强势、控制、会演
+眼型眉形：眼睛小，眉压低，法令纹深
+默认体态：下巴抬起，一手叉腰｜chin raised, one hand on her hip
+招牌小动作：转手上的金戒指｜twisting her gold ring；拍桌子｜slapping the table
+表情演法：
+  生气｜张大嘴吼，青筋，用手指人｜shouting with her mouth wide open, anger vein mark, pointing her finger
+  冷笑｜一侧嘴角上扬，眼睛没有高光｜one-sided smirk, eyes with no highlights
+  装可怜｜八字眉，手捂胸口，眼泪刚好含着｜pleading raised eyebrows, hand on her chest, tears welling on cue
+  震惊｜脸色发白，嘴半张｜face draining pale, mouth half open
+专属演出：仰拍 + 竖向阴影线｜low-angle shot looking up at the character, vertical gloomy shadow lines
+网点 / 配色倾向：阴影网点比别人深一档
+
+【表演卡】顾衍
+性格关键词：冷静、克制、正直
+眼型眉形：细长眼，平眉
+默认体态：站直，一只手插在白大褂口袋里｜standing upright, one hand in his white coat pocket
+招牌小动作：推眼镜｜pushing up his glasses；按住文件不松手｜holding a document firmly without letting go
+表情演法：
+  担心｜眉头轻皱，视线下垂｜slight frown, eyes lowered
+  认真｜眼镜反光遮住眼睛｜glasses glinting and hiding his eyes
+  温和｜嘴角极轻微上扬｜a barely visible smile
+专属演出：平视 + 大留白 + 冷白光｜eye-level shot, lots of empty space, cool white light
+网点 / 配色倾向：网点最浅，画面干净
+```
+
+定妆表提示词（每人一张，以林晚为例；全身视图用默认体态，四个表情用表演卡里的表情演法）：
+
+```text
+[彩色画风前缀], [彩色人物画法后缀], character reference sheet of [林晚英文描述串], front view, three-quarter view and full-body view standing straight with both hands gripping her bag strap in front of her, plus four expressions: cold glare without raising her voice and lips pressed tight, biting her lower lip with eyes brimming with tears that do not fall, pupils shrinking in shock, calmly lifting her eyes with the faintest smile, plain background, consistent character design, no text, no letters, no watermark
 ```
 
 ## 封面方案
@@ -123,5 +167,20 @@ B、C 的提示词按 A 的结构写，人物描述照抄外观卡的英文描�
 ```bash
 python scripts/render_visuals.py comic examples/ep01-comic.json
 ```
+
+## 黑白示范：一格完整拼装（含演出）
+
+`m4-closeup` 的第 1 格是无框大脸、爆发格：母亲逼签字的那一刻，用她的专属演出。
+
+```text
+格1｜无框大脸｜爆发格｜母亲俯身逼近，把笔硬塞过来
+  演出：镜头 仰拍 + 人物占满大格；背景演出 竖向阴影线；表演 母亲=生气演法 + 转金戒指
+  旁白：市医院肾内科
+  气泡：母亲「签吧，就一个字的事。」（右上，竖排）
+  提示词（英）：
+black and white Japanese josei romance manga, fine delicate ink linework, gray screentone shading, finely detailed glossy hair strands, eyes with layered highlights, hatched blush on the cheeks, elegant adult characters in a modern city setting, high contrast monochrome, elegant character design with a slim jaw, almond-shaped eyes with long lashes and layered highlights, a single-stroke nose, glossy lips, finely drawn hair strands with screentone highlights, Zhou Meifen, 55-year-old Chinese woman, about 6.5 heads tall, short and stout, round face with deep smile lines, downturned mouth and small eyes, short permed dark brown curly hair, dusty purple knit cardigan over a coral floral blouse, gold ring, small black crossbody bag, shouting with her mouth wide open, anger vein mark, twisting her gold ring, leaning down and thrusting a pen toward the viewer, low-angle shot looking up at the character, the character towering and filling the whole frame, cropped at the edges, vertical gloomy shadow lines, dark gradient screentone, empty space at the top right for a vertical speech bubble, aspect ratio 3:4, isolated on a plain white background, no text, no letters, no speech bubbles, no watermark, no signature
+```
+
+注意黑白版的人物描述串和彩色版一样（外观卡不变），只是画风前缀和画法后缀换成黑白版。
 
 换成黑白时：贴黑白风格卡再确认一次，风格前缀换成 design.md 第二节的黑白前缀，JSON 里写 `"mode": "bw"`，对白会自动竖排。人物画法后缀也换成黑白版（design.md 4.1），视觉设定里的主色改写成网点基调，外观卡的槽位不变。黑白 4 格样例见 `examples/ep01-comic-bw.json`（`m4-closeup`）；9 格写 `"layout": "m9-page"`。
