@@ -77,3 +77,17 @@ def test_check_episodes_runs_on_sample():
                         os.path.join(ROOT, "examples", "sample-12-episodes.md")],
                        capture_output=True, text=True)
     assert "没有找到" not in (r.stdout + r.stderr)
+
+
+@pytest.mark.skipif(not has_cjk_font(), reason="没有中文字体")
+def test_multipage_storyboard_renders_each_page(tmp_path):
+    out = tmp_path / "ep.png"
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render_visuals.py"), "comic",
+                        os.path.join(ROOT, "examples", "ep01-pages.json"), "--out", str(out), "--strip"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    with open(os.path.join(ROOT, "examples", "ep01-pages.json"), encoding="utf-8") as fh:
+        n = len(json.load(fh)["pages"])
+    for i in range(1, n + 1):
+        assert (tmp_path / f"ep-{i:02d}.png").exists()
+    assert (tmp_path / "ep-长条.png").exists()

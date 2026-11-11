@@ -15,6 +15,8 @@
     # 漫画：按分镜 JSON 排版（模板见 references/comic-guide.md）
     python scripts/render_visuals.py comic visuals/ep01-comic.json            # JSON 里 mode 决定彩色 / 黑白
     python scripts/render_visuals.py comic visuals/ep01-comic.json --bw       # 强制黑白风格
+    python scripts/render_visuals.py comic visuals/ep01-pages.json            # 多页：输出 ep01-pages-01.png、-02.png……
+    python scripts/render_visuals.py comic visuals/ep01-pages.json --page 3 --strip
 
     # 查看某种版式每一格的像素尺寸和建议出图比例
     python scripts/render_visuals.py layouts                      # 列出自由分格模板
@@ -839,21 +841,19 @@ def cmd_sizes(a):
     print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
 
 
-def cmd_comic(a):
-    with open(a.spec, encoding="utf-8") as fh:
-        spec = json.load(fh)
-    base_dir = os.path.dirname(os.path.abspath(a.spec))
-    mode = "bw" if (a.bw or spec.get("mode", "color") == "bw") else "color"
+def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_label=""):
+    """排一页。spec 是一页的分镜（layout / panels / title / footer / boxes ...）。返回 (用了真图的格数, 总格数)。"""
+    mode = "bw" if (force_bw or spec.get("mode", "color") == "bw") else "color"
     bw = mode == "bw"
     st = resolve_style(mode, spec.get("style"))
-    layout = a.layout or spec.get("layout") or ("m4-closeup" if bw else "4-inset")
+    layout = layout_override or spec.get("layout") or ("m4-closeup" if bw else "4-inset")
     W, H = spec.get("canvas", [CANVAS_W, CANVAS_H])
     title, footer = spec.get("title", ""), spec.get("footer", "")
     slots = layout_panels(layout, W, H, bool(title), bool(footer), st, spec.get("boxes"))
     panels = spec.get("panels", [])
     need = len(slots)
     if len(panels) != need:
-        print(f"  · 版式 {layout} 需要 {need} 格，分镜里有 {len(panels)} 格；多的忽略，少的补占位", file=sys.stderr)
+        print(f"  · {page_label}版式 {layout} 需要 {need} 格，分镜里有 {len(panels)} 格；多的忽略，少的补占位", file=sys.stderr)
         panels = (panels + [{}] * need)[:need]
 
     canvas = Image.new("RGB", (W, H), st["bg"])
@@ -913,10 +913,58 @@ def cmd_comic(a):
     if footer:
         f = font(38, st["title_font"])
         d.text((W / 2, H - st["margin"] - FOOTER_BAND / 2 + 6), footer, font=f, fill=st["ink"], anchor="mm")
+    page_no = spec.get("page_no")
+    if page_no:  # 页码：右下角小字
+        f = font(24, st["title_font"])
+        d.text((W - st["margin"], H - st["margin"] / 2 - 4), page_no, font=f, fill=st["ink"], anchor="rm")
 
-    out = a.out or os.path.splitext(a.spec)[0] + ".png"
     canvas.save(out)
-    print(f"已生成 {out}（版式 {layout}，{'黑白' if bw else '彩色'}风格，{found}/{need} 格用了真实图片）")
+    print(f"已生成 {out}（{page_label}版式 {layout}，{'黑白' if bw else '彩色'}风格，{found}/{need} 格用了真实图片）")
+    return found, need
+
+
+INHERIT = ("mode", "style", "canvas")
+
+
+def cmd_comic(a):
+    """一页：JSON 顶层就是一页的分镜。多页：JSON 里写 "pages": [ {一页}, {一页}, ... ]，
+    mode / style / canvas 写在顶层，各页继承；只有第 1 页显示章节标题，每页自动加页码。"""
+    with open(a.spec, encoding="utf-8") as fh:
+        spec = json.load(fh)
+    base_dir = os.path.dirname(os.path.abspath(a.spec))
+    stem = os.path.splitext(a.out or os.path.splitext(a.spec)[0] + ".png")[0]
+    pages = spec.get("pages")
+    if not pages:
+        render_page(spec, base_dir, stem + ".png", a.bw, a.layout)
+        return
+    if len(pages) > 10:
+        print(f"  · 这一章有 {len(pages)} 页，超过建议的最多 10 页，考虑拆成两章", file=sys.stderr)
+    only = {int(x) for x in a.page.split(",")} if a.page else None
+    total = len(pages)
+    outs = []
+    for n, page in enumerate(pages, 1):
+        if only and n not in only:
+            continue
+        ps = {k: spec[k] for k in INHERIT if k in spec}
+        ps.update(page)
+        if n == 1 and "title" not in page and spec.get("title"):
+            ps["title"] = spec["title"]
+        if n == total and "footer" not in page and spec.get("footer"):
+            ps["footer"] = spec["footer"]
+        ps.setdefault("page_no", f"{n} / {total}")
+        out = f"{stem}-{n:02d}.png"
+        render_page(ps, base_dir, out, a.bw, a.layout, f"第 {n} 页 ")
+        outs.append(out)
+    if a.strip and outs:
+        ims = [Image.open(o) for o in outs]
+        strip = Image.new("RGB", (ims[0].width, sum(i.height for i in ims)), "white")
+        y = 0
+        for im in ims:
+            strip.paste(im, (0, y))
+            y += im.height
+        strip.save(stem + "-长条.png")
+        print(f"已生成 {stem}-长条.png（{len(ims)} 页拼成一张竖长图，方便发条漫平台）")
+
 
 
 def cmd_cover(a):
@@ -1026,6 +1074,8 @@ def main():
     m.add_argument("spec", help="分镜 JSON 文件")
     m.add_argument("--layout", help="覆盖 JSON 里的版式：自由分格模板（彩色 4-inset 等，黑白 m4-closeup 等，见 layouts）或网格 2x2、3x3、1x4")
     m.add_argument("--bw", action="store_true", help="强制黑白风格")
+    m.add_argument("--page", help="多页时只排其中几页，如 2 或 2,3")
+    m.add_argument("--strip", action="store_true", help="多页时另外把所有页拼成一张竖长图")
     m.add_argument("--out")
 
     sub.add_parser("layouts", help="列出自由分格模板和适用场景")

@@ -1,0 +1,402 @@
+{
+  "mode": "color",
+  "title": "第1章 19块9混进酒廊，被他当场拆台",
+  "footer": "他还知道多少？",
+  "pages": [
+    {
+      "layout": "4-inset",
+      "beat": "开场：19.9 混进酒廊",
+      "hook": "一眼认出“老板”",
+      "panels": [
+        {
+          "scene": "前台扫码，屏幕跳出红字“新人专享·单日有效”，前台一脸公事公办",
+          "image": "ep01-pg1-1.png",
+          "caption": "湾景会·周五晚",
+          "dialogue": [
+            {
+              "speaker": "前台",
+              "text": "团购券不能带朋友，也不能续时。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "scene": "前台给江遥系上荧光绿纸手环，她营业式微笑往下拽袖子",
+          "image": "ep01-p1.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "平时都是会员朋友带我来。",
+              "type": "speech",
+              "pos": "bottom-right"
+            }
+          ]
+        },
+        {
+          "scene": "大场景：三十楼落地窗前，江遥挺直站着眺望深圳湾；小头像回忆周可可说话",
+          "image": "ep01-pg1-3.png",
+          "caption": "同事周可可说：",
+          "dialogue": [
+            {
+              "speaker": "周可可",
+              "text": "五十多岁，深色西装，胸口金徽章。",
+              "type": "speech",
+              "pos": "top-right"
+            },
+            {
+              "speaker": "江遥",
+              "text": "拿不下来，品牌部优化两个人。",
+              "type": "monologue",
+              "pos": "middle-right"
+            }
+          ]
+        },
+        {
+          "scene": "插入小格：靠窗西装男胸口的金色徽章特写",
+          "image": "ep01-pg1-4.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "一眼就认出来了。",
+              "type": "monologue",
+              "pos": "bottom-right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-hero",
+      "beat": "假电话被拆穿",
+      "hook": "那块板子越看越眼熟",
+      "panels": [
+        {
+          "scene": "全景：吧台，江遥举着手机对空气说话，远处卫衣男低头修电路板",
+          "image": "ep01-p2.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "潜水？我考的是进阶证……",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "scene": "卫衣男梁屿侧脸，不抬头",
+          "image": "ep01-pg2-2.png",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "你那通电话，\n是静音。",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "scene": "梁屿近景，镊子停在电路板上",
+          "image": "ep01-p3.png",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "零秒。",
+              "type": "speech",
+              "pos": "bottom-right"
+            }
+          ]
+        },
+        {
+          "scene": "无框大格：江遥把手机扣在吧台上，眯眼盯着那块绿色电路板",
+          "image": "ep01-pg2-4.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "我在等对方说话。",
+              "type": "speech",
+              "pos": "top-left"
+            },
+            {
+              "speaker": "梁屿",
+              "text": "等了四十秒。",
+              "type": "speech",
+              "pos": "top-right"
+            },
+            {
+              "speaker": "江遥",
+              "text": "那块板子……越看越眼熟。",
+              "type": "monologue",
+              "pos": "bottom-left"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-hero",
+      "beat": "她赢一回合，又说漏嘴",
+      "hook": "“你也是会员？”",
+      "panels": [
+        {
+          "scene": "全景双人：江遥凑近指着电路板，梁屿镊子停住第一次抬眼",
+          "image": "ep01-p4.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "电量计量模块？",
+              "type": "speech",
+              "pos": "top-left"
+            },
+            {
+              "speaker": "江遥",
+              "text": "城中村房东最怕这个。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "scene": "江遥手指比划，越说越起劲",
+          "image": "ep01-pg3-2.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "一度电一块五，\n走多快全凭良心。",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "scene": "江遥捂住嘴，眼神飘忽，大汗珠",
+          "image": "ep01-pg3-3.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "……说漏嘴了。",
+              "type": "monologue",
+              "pos": "bottom-right"
+            }
+          ]
+        },
+        {
+          "scene": "无框大格：梁屿终于抬头，看了她整整三秒",
+          "image": "ep01-pg3-4.png",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "你也是会员？",
+              "type": "speech",
+              "pos": "top-right"
+            },
+            {
+              "speaker": "江遥",
+              "text": "当然。",
+              "type": "speech",
+              "pos": "bottom-left"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-inset",
+      "beat": "手环、威士忌、泼大衣",
+      "hook": "吊牌 ¥4800 滑出来",
+      "panels": [
+        {
+          "scene": "并排：她袖口露出荧光绿手环，笑容冻住；他面无表情嘴角一抽",
+          "image": "ep01-p5.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "今年的新款\n会员手环。",
+              "type": "speech",
+              "pos": "top-right"
+            },
+            {
+              "speaker": "梁屿",
+              "text": "嗯。挺环保。",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ],
+          "text_scale": 0.9
+        },
+        {
+          "scene": "她把免费特调推开，指着酒单上的“188”，面不改色",
+          "image": "ep01-pg4-2.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "威士忌，谢谢。",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "scene": "大格：散场人群撞到她胳膊，整杯威士忌泼在大衣上，她强行大笑，他按住她手腕",
+          "image": "ep01-p7.png",
+          "sfx": {
+            "text": "哗啦！",
+            "pos": "top-right"
+          },
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "这件穿好几年了，旧衣服！",
+              "type": "speech",
+              "pos": "top"
+            }
+          ]
+        },
+        {
+          "scene": "插入小格：袖口滑出来的吊牌特写，印着¥4800",
+          "image": "ep01-pg4-4.png",
+          "caption": "吊牌：¥4800",
+          "dialogue": []
+        }
+      ]
+    },
+    {
+      "layout": "4-hero",
+      "beat": "三指、点赞通知",
+      "hook": "他好像什么都没看见",
+      "panels": [
+        {
+          "scene": "全景双人：他递来两张干纸巾，按住她的手腕",
+          "image": "ep01-pg5-1.png",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "羊绒别用湿巾。\n按，别擦。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "scene": "江遥愣住，若有所思",
+          "image": "ep01-pg5-2.png",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "蒸汽离面料三指。",
+              "type": "speech",
+              "pos": "top-left"
+            },
+            {
+              "speaker": "江遥",
+              "text": "三指……怎么这么耳熟？",
+              "type": "monologue",
+              "pos": "bottom-right"
+            }
+          ]
+        },
+        {
+          "scene": "手机锁屏通知特写：点赞破10万",
+          "image": "ep01-pg5-3.png",
+          "caption": "【点赞破10万】沙尾村月租1500的单间",
+          "dialogue": []
+        },
+        {
+          "scene": "无框大格：她一把把手机翻过去抬眼；他低头拧螺丝，好像什么都没看见",
+          "image": "ep01-pg5-4.png",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "“深圳城中村生活志”，三十万粉。没人知道是我。",
+              "type": "monologue",
+              "pos": "top-left"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-hero",
+      "beat": "值班经理、周一会议室",
+      "hook": "“江经理，大衣退了吗？”",
+      "boxes": {
+        "1": [
+          0,
+          0,
+          1,
+          0.24
+        ],
+        "2": [
+          0,
+          0.24,
+          0.5,
+          0.46
+        ],
+        "3": [
+          0.5,
+          0.24,
+          1,
+          0.46
+        ],
+        "4": [
+          0,
+          0.46,
+          1,
+          1
+        ]
+      },
+      "panels": [
+        {
+          "scene": "递名片给西装男，他指了指她的荧光绿手环",
+          "image": "ep01-p6.png",
+          "dialogue": [
+            {
+              "speaker": "值班经理",
+              "text": "我是值班经理。",
+              "type": "speech",
+              "pos": "top-right"
+            },
+            {
+              "speaker": "值班经理",
+              "text": "19.9体验券，\n十点到期。",
+              "type": "speech",
+              "pos": "bottom-right"
+            }
+          ],
+          "text_scale": 0.9
+        },
+        {
+          "scene": "电梯镜面反光：他把她推开的特调一口喝完",
+          "image": "ep01-p8.png",
+          "caption": "电梯门合上前——",
+          "dialogue": []
+        },
+        {
+          "scene": "地铁上，江遥看手机微信：周可可回了个可爱表情包",
+          "image": "ep01-pg6-3.png",
+          "dialogue": [
+            {
+              "speaker": "周可可",
+              "text": "啊？可能我记错了，\n抱歉抱歉～",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "scene": "周一会议室：白衬衫梁屿坐主位抬眼，江遥石化",
+          "image": "ep01-p9.png",
+          "caption": "周一·拓界会议室",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "江经理，大衣退了吗？",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

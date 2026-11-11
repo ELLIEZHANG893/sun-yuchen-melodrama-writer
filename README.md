@@ -81,7 +81,7 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 - `examples/sample-12-episodes.md`：试跑样例（设定卡 + 节奏表 + 前三章）。
 - `examples/sample-foreshadowing.md`：深圳都市喜剧样例：伏笔清单、第 1 章，以及和用户来回对齐修改的过程。
 - `examples/sample-cover-and-comic.md`：同一个故事的外观卡、封面方案和第 1 章四宫格分镜。
-- `examples/ep01-comic.json`、`examples/ep01-comic-bw.json`：彩色 / 黑白分镜 JSON 样例，可直接用脚本预览。
+- `examples/ep01-comic.json`、`examples/ep01-comic-bw.json`：彩色 / 黑白单页分镜 JSON 样例；`examples/ep01-pages.json`：第 1 章拆成 6 页的多页样例。
 - `scripts/check_episodes.py`：检查每集字数和结尾钩子。
 - `scripts/render_visuals.py`：封面叠字、宫格漫画排版、黑白转换。
 - `agents/openai.yaml`：Codex 界面元数据。
