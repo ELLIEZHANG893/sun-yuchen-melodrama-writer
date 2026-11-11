@@ -497,9 +497,9 @@ def draw_sfx(canvas, cell, sfx, base_size, st):
 
 # ---------- 版式 ----------
 
-# 自由分格模板（彩色风格的默认版式），坐标是内容区的比例 [x0, y0, x1, y1]。
+# 自由分格模板，坐标是内容区的比例：矩形写 [x0, y0, x1, y1]，斜切格写多边形 [(x, y), ...]（顺时针，必须是凸多边形）。
 # 列表顺序 = 阅读顺序。kind：box 有框格；free 无框大格（画面羽化融进底色）；inset 压在别的格子上的插入小格。
-# fx：speed 加放射速度线。
+# fx：speed 加放射速度线。4-*/9-* 是彩色风格的模板，m4-*/m9-* 是黑白日漫风格的模板（斜切分格）。
 TEMPLATES = {
     "4-hero": {
         "name": "主角大格",
@@ -561,8 +561,87 @@ TEMPLATES = {
             ([0, .72, 1, 1], "box", None),
         ],
     },
+    # ----- 黑白日漫：斜切分格 -----
+    "m4-closeup": {
+        "name": "大脸对话",
+        "use": "黑白四格：无框大脸特写 + 全身格 → 下方两张脸被斜线切开。两人对话、试探、表情反转时用",
+        "panels": [
+            ([0, 0, .60, .50], "free", None),
+            ([.60, 0, 1, .50], "box", None),
+            ([(0, .50), (.53, .50), (.46, 1), (0, 1)], "box", None),
+            ([(.53, .50), (1, .50), (1, 1), (.46, 1)], "box", None),
+        ],
+    },
+    "m4-embrace": {
+        "name": "双人大格",
+        "use": "黑白四格：特写 + 斜切动作格 → 无框双人大场景，角上压一个反应特写。拥抱、对峙、靠近时用",
+        "panels": [
+            ([0, 0, .44, .55], "box", None),
+            ([(.44, 0), (1, 0), (1, .49), (.44, .55)], "box", None),
+            ([0, .55, 1, 1], "free", None),
+            ([.60, .58, .97, .80], "inset", None),
+        ],
+    },
+    "m4-confess": {
+        "name": "告白大脸",
+        "use": "黑白四格：宽场景 → 两格斜切推进 → 无框大脸收尾。告白、拒绝、崩溃、狠话这类结尾是一张脸时用",
+        "panels": [
+            ([0, 0, 1, .36], "box", None),
+            ([(0, .36), (.56, .36), (.49, .60), (0, .60)], "box", None),
+            ([(.56, .36), (1, .36), (1, .60), (.49, .60)], "box", None),
+            ([0, .60, 1, 1], "free", "speed"),
+        ],
+    },
+    "m9-page": {
+        "name": "日漫整页",
+        "use": "黑白九格：斜底宽格 → 三格斜切 → 无框大脸 + 两小格 → 两格斜切收尾。九格默认",
+        "panels": [
+            ([(0, 0), (1, 0), (1, .14), (0, .17)], "box", None),
+            ([(0, .17), (.36, .1592), (.30, .36), (0, .36)], "box", None),
+            ([(.36, .1592), (.70, .149), (.66, .36), (.30, .36)], "box", None),
+            ([(.70, .149), (1, .14), (1, .36), (.66, .36)], "box", None),
+            ([0, .36, .62, .70], "free", None),
+            ([.62, .36, 1, .53], "box", None),
+            ([.62, .53, 1, .70], "box", None),
+            ([(0, .70), (.45, .70), (.39, 1), (0, 1)], "box", None),
+            ([(.45, .70), (1, .70), (1, 1), (.39, 1)], "box", None),
+        ],
+    },
 }
 KIND_LABEL = {"box": "", "free": " · 无框", "inset": " · 插入小格"}
+
+
+def rect_poly(r):
+    x0, y0, x1, y1 = r
+    return [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+
+
+def inset_poly(pts, ds):
+    """凸多边形每条边各自往里收 ds[i] 像素（用来留格距；页边上的边收 0）。"""
+    n = len(pts)
+    area = sum(pts[i][0] * pts[(i + 1) % n][1] - pts[(i + 1) % n][0] * pts[i][1] for i in range(n))
+    sgn = 1 if area > 0 else -1
+    lines = []
+    for i in range(n):
+        (x0, y0), (x1, y1) = pts[i], pts[(i + 1) % n]
+        dx, dy = x1 - x0, y1 - y0
+        L = math.hypot(dx, dy) or 1
+        nx, ny = -dy / L * sgn, dx / L * sgn
+        lines.append(((x0 + nx * ds[i], y0 + ny * ds[i]), (dx, dy)))
+    out = []
+    for i in range(n):
+        (p, r), (q, t) = lines[i - 1], lines[i]
+        den = r[0] * t[1] - r[1] * t[0]
+        if abs(den) < 1e-9:
+            out.append(q)
+            continue
+        u = ((q[0] - p[0]) * t[1] - (q[1] - p[1]) * t[0]) / den
+        out.append((p[0] + r[0] * u, p[1] + r[1] * u))
+    return out
+
+
+def on_page_edge(a, b):
+    return any(abs(a[k] - v) < 1e-6 and abs(b[k] - v) < 1e-6 for k in (0, 1) for v in (0, 1))
 
 
 def parse_grid(s):
@@ -576,23 +655,25 @@ def parse_grid(s):
 
 
 def layout_panels(layout, W, H, has_title, has_footer, st):
-    """返回 [{box, kind, fx}]，顺序即阅读顺序。"""
+    """返回 [{box, poly, kind, fx}]，顺序即阅读顺序。box 是外接矩形，文字按它摆放。"""
     m, g = st["margin"], st["gutter"]
     top = m + (TITLE_BAND if has_title else 0)
     bottom = H - m - (FOOTER_BAND if has_footer else 0)
     if layout in TEMPLATES:
         X0, Y0, CW, CH = m, top, W - 2 * m, bottom - top
         out = []
-        for (fx0, fy0, fx1, fy1), kind, fx in TEMPLATES[layout]["panels"]:
+        for shape, kind, fx in TEMPLATES[layout]["panels"]:
+            fpts = rect_poly(shape) if not isinstance(shape[0], (tuple, list)) else [tuple(v) for v in shape]
             if st["rtl"]:
-                fx0, fx1 = 1 - fx1, 1 - fx0
-            x0, y0, x1, y1 = X0 + fx0 * CW, Y0 + fy0 * CH, X0 + fx1 * CW, Y0 + fy1 * CH
-            if kind != "inset":  # 有框格和无框格之间留格距；外边缘对齐页边
-                x0 += g / 2 if fx0 > 0 else 0
-                y0 += g / 2 if fy0 > 0 else 0
-                x1 -= g / 2 if fx1 < 1 else 0
-                y1 -= g / 2 if fy1 < 1 else 0
-            out.append({"box": tuple(int(round(v)) for v in (x0, y0, x1, y1)), "kind": kind, "fx": fx})
+                fpts = [(1 - x, y) for x, y in fpts][::-1]
+            pts = [(X0 + x * CW, Y0 + y * CH) for x, y in fpts]
+            if kind != "inset":  # 格子之间留格距；页边上的边不收，外缘对齐页边
+                n = len(fpts)
+                ds = [0 if on_page_edge(fpts[i], fpts[(i + 1) % n]) else g / 2 for i in range(n)]
+                pts = inset_poly(pts, ds)
+            xs, ys = [x for x, _ in pts], [y for _, y in pts]
+            box = tuple(int(round(v)) for v in (min(xs), min(ys), max(xs), max(ys)))
+            out.append({"box": box, "poly": pts, "kind": kind, "fx": fx})
         return out
     cols, rows = parse_grid(layout)
     cw = (W - 2 * m - (cols - 1) * g) / cols
@@ -602,7 +683,8 @@ def layout_panels(layout, W, H, has_title, has_footer, st):
         row = []
         for c in range(cols):
             x, y = m + c * (cw + g), top + r * (ch + g)
-            row.append({"box": tuple(int(round(v)) for v in (x, y, x + cw, y + ch)), "kind": "box", "fx": None})
+            box = tuple(int(round(v)) for v in (x, y, x + cw, y + ch))
+            row.append({"box": box, "poly": rect_poly(box), "kind": "box", "fx": None})
         out += row[::-1] if st["rtl"] else row
     return out
 
@@ -623,20 +705,31 @@ def mix(c1, c2, t):
     return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
 
 
-def paste_free(canvas, img, box):
-    """无框格：四边羽化，画面像直接画在纸上。"""
+def poly_mask(slot, shrink=0):
+    box, pts = slot["box"], slot["poly"]
     w, h = box[2] - box[0], box[3] - box[1]
-    f = int(min(w, h) * 0.07)
+    local = [(x - box[0], y - box[1]) for x, y in pts]
+    if shrink:
+        local = inset_poly(local, [shrink] * len(local))
     mask = Image.new("L", (w, h), 0)
-    ImageDraw.Draw(mask).rectangle((f, f, w - f, h - f), fill=255)
-    mask = mask.filter(ImageFilter.GaussianBlur(f / 2))
+    ImageDraw.Draw(mask).polygon(local, fill=255)
+    return mask
+
+
+def paste_free(canvas, img, slot):
+    """无框格：四边羽化，画面像直接画在纸上。"""
+    box = slot["box"]
+    f = int(min(box[2] - box[0], box[3] - box[1]) * 0.07)
+    mask = poly_mask(slot, f).filter(ImageFilter.GaussianBlur(f / 2))
     canvas.paste(img, box[:2], mask)
 
 
-def draw_speedlines(canvas, box, ink):
-    """放射速度线：从格子边缘往中心收，中间留给人物。"""
-    d = ImageDraw.Draw(canvas)
-    x0, y0, x1, y1 = box
+def draw_speedlines(canvas, slot, ink):
+    """放射速度线：从格子边缘往中心收，中间留给人物；斜切格按形状裁掉多余部分。"""
+    box = slot["box"]
+    layer = Image.new("RGBA", (box[2] - box[0], box[3] - box[1]), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    x0, y0, x1, y1 = 0, 0, layer.width, layer.height
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
     n = 36
     for k in range(n):
@@ -651,6 +744,9 @@ def draw_speedlines(canvas, box, ink):
         ox, oy = cx + dx * r_edge, cy + dy * r_edge
         d.polygon([(ox + px * half, oy + py * half), (ox - px * half, oy - py * half),
                    (cx + dx * r_in, cy + dy * r_in)], fill=ink)
+    alpha = Image.composite(layer.getchannel("A"), Image.new("L", layer.size, 0), poly_mask(slot))
+    layer.putalpha(alpha)
+    canvas.paste(layer, box[:2], layer)
 
 
 def panel_size_text(i, p):
@@ -660,9 +756,16 @@ def panel_size_text(i, p):
 
 
 def cmd_layouts(a):
-    print("自由分格模板（彩色风格默认用这些，规整网格写 2x2、3x3、1x4）：")
+    print("自由分格模板（规整网格写 2x2、3x3、1x4）：")
+    print(" 彩色：")
     for k, t in TEMPLATES.items():
-        print(f"  {k:9s} {t['name']}：{t['use']}")
+        if k.startswith("m"):
+            continue
+        print(f"  {k:11s} {t['name']}：{t['use']}")
+    print(" 黑白：")
+    for k, t in TEMPLATES.items():
+        if k.startswith("m"):
+            print(f"  {k:11s} {t['name']}：{t['use']}")
 
 
 def cmd_sizes(a):
@@ -681,7 +784,7 @@ def cmd_comic(a):
     mode = "bw" if (a.bw or spec.get("mode", "color") == "bw") else "color"
     bw = mode == "bw"
     st = resolve_style(mode, spec.get("style"))
-    layout = a.layout or spec.get("layout") or ("4-inset" if not bw else "2x2")
+    layout = a.layout or spec.get("layout") or ("m4-closeup" if bw else "4-inset")
     W, H = spec.get("canvas", [CANVAS_W, CANVAS_H])
     title, footer = spec.get("title", ""), spec.get("footer", "")
     slots = layout_panels(layout, W, H, bool(title), bool(footer), st)
@@ -716,17 +819,18 @@ def cmd_comic(a):
                              tuple(p.get("focus", (0.5, 0.5))), fill)
         found += ok
         if kind == "free":
-            paste_free(canvas, img, box)
+            paste_free(canvas, img, slot)
             if slot["fx"] == "speed" or p.get("speedlines"):
-                draw_speedlines(canvas, box, st["ink"])
+                draw_speedlines(canvas, slot, st["ink"])
             continue
         if kind == "inset":  # 插入小格外圈留一道底色，像贴在大格上
-            ring = st["gutter"] * 0.6
+            ring = max(8, st["gutter"] * 0.6)
             d.rectangle((box[0] - ring, box[1] - ring, box[2] + ring, box[3] + ring), fill=st["bg"])
-        canvas.paste(img, box[:2])
-        if p.get("speedlines"):
-            draw_speedlines(canvas, box, st["ink"])
-        d.rectangle(box, outline=st["ink"], width=st["border"])
+        canvas.paste(img, box[:2], poly_mask(slot))
+        if slot["fx"] == "speed" or p.get("speedlines"):
+            draw_speedlines(canvas, slot, st["ink"])
+        pts = slot["poly"]
+        d.line(pts + [pts[0], pts[1]], fill=st["ink"], width=st["border"], joint="curve")
 
     for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面
         box = slot["box"]
@@ -858,14 +962,14 @@ def main():
 
     m = sub.add_parser("comic", help="按分镜 JSON 排四宫格 / 九宫格 / 竖条漫画")
     m.add_argument("spec", help="分镜 JSON 文件")
-    m.add_argument("--layout", help="覆盖 JSON 里的版式：自由分格模板（4-hero、4-splash、4-inset、9-hero、9-splash）或网格 2x2、3x3、1x4")
+    m.add_argument("--layout", help="覆盖 JSON 里的版式：自由分格模板（彩色 4-inset 等，黑白 m4-closeup 等，见 layouts）或网格 2x2、3x3、1x4")
     m.add_argument("--bw", action="store_true", help="强制黑白风格")
     m.add_argument("--out")
 
     sub.add_parser("layouts", help="列出自由分格模板和适用场景")
 
     s = sub.add_parser("sizes", help="查看版式每格尺寸、建议出图比例和格子类型")
-    s.add_argument("--layout", default="4-inset")
+    s.add_argument("--layout", default="4-inset")  # 黑白可用 m4-closeup 等
     s.add_argument("--mode", choices=["color", "bw"], default="color")
     s.add_argument("--width", type=int, default=CANVAS_W)
     s.add_argument("--height", type=int, default=CANVAS_H)

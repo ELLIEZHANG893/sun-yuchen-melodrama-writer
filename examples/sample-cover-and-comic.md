@@ -1,19 +1,59 @@
 # 示例：封面方案 + 第 1 章四宫格分镜
 
 > 接 `sample-12-episodes.md` 的故事。用户输入：“给这部剧做个封面，再把第 1 章做成彩色四宫格。”
-> 采用默认值：封面 3:4、3 个方向；漫画 2x2、彩色（暖调扁平图像小说风，用户确认不微调）。
+> 采用默认值：封面 3:4、3 个方向；漫画彩色 4 格（暖调扁平图像小说风，自由分格，用户确认不微调）。
+
+## 本作视觉设定
+
+```text
+【视觉设定】
+画风：彩色｜暖调扁平图像小说风（微调：无）
+本作主色：天蓝 #BCD9EA（医院）+ 蜜桃 #F7D6B5（家和老房子）；强调色 #E46A4B
+场景基调：医院走廊冷白日光灯；病房拥挤的午后；外婆老房子的黄昏暖光
+视觉母题：外婆的铁盒（关键章节反复出现，只有它和配型报告用强调色）
+一句话：冷蓝医院里，一个橙红色的铁盒
+```
 
 ## 角色外观卡
 
+三个人的区分：发型轮廓（齐肩直发 / 短烫卷发 / 三七分短发）、体型（偏瘦中等 / 矮胖 / 高瘦）、配色冷暖（米色天蓝 / 雾粉紫珊瑚 / 白天蓝）都不同，涂黑剪影也能认出来。
+
 ```text
-【外观卡】林晚｜27岁中国女性，齐肩黑色直发，鹅蛋脸，眉眼清冷，左手腕一块旧皮带手表，米色风衣，里面白衬衫
-Lin Wan: 27-year-old Chinese woman, shoulder-length straight black hair, oval face, cool calm eyes, worn leather-strap watch on left wrist, beige trench coat over a white shirt
+【外观卡】林晚｜主角，审计员
+年龄段 / 身高体型：27 岁，中等身高，偏瘦
+脸型 / 眼型：鹅蛋脸，眼尾微微上挑
+发型轮廓 + 发色：齐肩黑色直发，左边别在耳后
+固定服装：米色风衣 + 白衬衫 + 藏青直筒裤
+角色配色：米色 + 天蓝
+视觉锚点：左手腕旧棕色皮带手表 + 右眼下一颗小痣
+默认表情：平静
+英文描述串：Lin Wan, 27-year-old Chinese woman, slim, oval face with slightly upturned eye corners, shoulder-length straight black hair tucked behind her left ear, small mole under her right eye, beige trench coat over a white shirt, navy trousers, worn brown leather-strap watch on her left wrist
 
-【外观卡】周美芬（母亲）｜55岁中国女性，烫过的短卷发，颧骨高，嘴角下垂，深紫色针织开衫，手指上一枚金戒指
-Zhou Meifen: 55-year-old Chinese woman, short permed curly hair, high cheekbones, downturned mouth, dark purple knit cardigan, gold ring on her finger
+【外观卡】周美芬｜母亲，对手
+年龄段 / 身高体型：55 岁，个子矮，体型敦实
+脸型 / 眼型：圆脸，法令纹深，嘴角下垂，眼睛偏小
+发型轮廓 + 发色：短烫卷发，深棕色
+固定服装：雾粉紫针织开衫 + 珊瑚色碎花衬衫
+角色配色：雾粉紫 + 珊瑚粉
+视觉锚点：右手一枚金戒指 + 斜挎黑色小皮包
+默认表情：生气 / 狠决
+英文描述串：Zhou Meifen, 55-year-old Chinese woman, short and stout, round face with deep smile lines, downturned mouth and small eyes, short permed dark brown curly hair, dusty purple knit cardigan over a coral floral blouse, gold ring, small black crossbody bag
 
-【外观卡】顾衍｜30岁中国男性，个子高，短碎发，细框眼镜，白大褂，胸前蓝色工作牌
-Gu Yan: 30-year-old Chinese man, tall, short textured hair, thin-framed glasses, white doctor's coat, blue ID badge on his chest
+【外观卡】顾衍｜肾内科医生，同盟
+年龄段 / 身高体型：30 岁，高瘦
+脸型 / 眼型：长脸，下巴窄，眼型细长
+发型轮廓 + 发色：黑色短发，三七分
+固定服装：白大褂 + 浅蓝衬衫
+角色配色：白 + 天蓝
+视觉锚点：细框眼镜 + 胸前蓝色工作牌
+默认表情：平静
+英文描述串：Gu Yan, 30-year-old Chinese man, tall and lean, long face with a narrow chin and narrow eyes, short black hair with a side part, thin-framed glasses, white doctor's coat over a light blue shirt, blue ID badge on his chest
+```
+
+定妆表提示词（每人一张，以林晚为例）：
+
+```text
+[彩色画风前缀], [彩色人物画法后缀], character reference sheet of [林晚英文描述串], front view, three-quarter view and full-body view, plus four expressions: calm, angry, crying, surprised, plain background, consistent character design, no text, no letters, no watermark
 ```
 
 ## 封面方案
@@ -41,7 +81,7 @@ python scripts/render_visuals.py cover --image cover-a.png \
 配色：冷灰蓝 + 暖色手表，强调色 #F2B33D
 ```
 
-B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选定后写进 `story-bible.md`。
+B、C 的提示词按 A 的结构写，人物描述照抄外观卡的英文描述串。用户选定后写进 `story-bible.md`。
 
 ## 第 1 章 4 格分镜（彩色，自由分格 `4-inset`）
 
@@ -84,4 +124,4 @@ B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选�
 python scripts/render_visuals.py comic examples/ep01-comic.json
 ```
 
-换成黑白时：贴黑白风格卡再确认一次，风格前缀换成 design.md 第二节的黑白前缀，JSON 里写 `"mode": "bw"`，对白会自动竖排。黑白四宫格样例见 `examples/ep01-comic-bw.json`；九宫格按选格表把第 1 章拆成 9 格，写 `"layout": "3x3"`。
+换成黑白时：贴黑白风格卡再确认一次，风格前缀换成 design.md 第二节的黑白前缀，JSON 里写 `"mode": "bw"`，对白会自动竖排。人物画法后缀也换成黑白版（design.md 4.1），视觉设定里的主色改写成网点基调，外观卡的槽位不变。黑白 4 格样例见 `examples/ep01-comic-bw.json`（`m4-closeup`）；9 格写 `"layout": "m9-page"`。
