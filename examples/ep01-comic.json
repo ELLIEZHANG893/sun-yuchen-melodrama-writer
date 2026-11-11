@@ -1,0 +1,40 @@
+{
+  "layout": "2x2",
+  "mode": "color",
+  "title": "第1章 配型单说我不是亲生的",
+  "footer": "她说的第一句话是——",
+  "panels": [
+    {
+      "image": "ep01-p1.png",
+      "scene": "病房，母亲把笔硬塞进林晚手里，指甲掐进手背，病床上的弟弟扭头看墙",
+      "caption": "市医院 肾内科病房",
+      "dialogue": [
+        { "speaker": "母亲", "text": "签吧，就一个字的事。", "pos": "top-right" }
+      ]
+    },
+    {
+      "image": "ep01-p2.png",
+      "scene": "母亲一巴掌拍在床头柜上，水杯跳起，林晚低头不动",
+      "sfx": { "text": "啪！", "pos": "top-right" },
+      "dialogue": [
+        { "speaker": "母亲", "text": "我养你二十七年，你跟我讲条件？", "type": "shout", "pos": "bottom-left" }
+      ]
+    },
+    {
+      "image": "ep01-p3.png",
+      "scene": "走廊尽头，年轻医生顾衍递出牛皮纸文件袋，手没松开",
+      "dialogue": [
+        { "speaker": "顾衍", "text": "有没有人跟你提过……你是领养的？", "pos": "top-left" },
+        { "speaker": "林晚", "text": "我是我妈亲生的。", "type": "thought", "pos": "bottom-right" }
+      ]
+    },
+    {
+      "image": "ep01-p4.png",
+      "scene": "特写：报告最后一页，背景虚化处母亲站在病房门口，脸色发白",
+      "caption": "无生物学亲缘关系",
+      "dialogue": [
+        { "speaker": "母亲", "text": "谁让你们查这个的？", "pos": "bottom-right" }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
 interface:
   display_name: "短剧连载写作器"
-  short_description: "输入主题和框架，按番茄网文与狗血短剧手法连载 10—20 集，每集短、集尾留悬念"
+  short_description: "输入主题和框架，按番茄网文与狗血短剧手法连载 10—20 集，每集短、集尾留悬念；可出封面方案和四宫格 / 九宫格漫画分镜"
   default_prompt: "Use $short-drama-serial-writer to turn my theme and outline into a 12-episode serialized short drama, each episode short and ending on a cliffhanger."
