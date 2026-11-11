@@ -689,10 +689,20 @@ def layout_panels(layout, W, H, has_title, has_footer, st, boxes=None):
     m, g = st["margin"], st["gutter"]
     top = m + (TITLE_BAND if has_title else 0)
     bottom = H - m - (FOOTER_BAND if has_footer else 0)
-    if layout in TEMPLATES:
+    if layout == "custom":  # 自定义版式：格子全部由 boxes 给出，按格号排序就是阅读顺序
+        if not boxes:
+            sys.exit("layout 写 custom 时，要用 boxes 给出每一格的位置")
+        shapes = []
+        for key in sorted(boxes, key=int):
+            val = boxes[key]
+            shapes.append((val["box"], val.get("kind", "box"), val.get("fx")) if isinstance(val, dict)
+                          else (val, "box", None))
+        boxes = None
+    if layout == "custom" or layout in TEMPLATES:
         X0, Y0, CW, CH = m, top, W - 2 * m, bottom - top
         out = []
-        shapes = list(TEMPLATES[layout]["panels"])
+        if layout != "custom":
+            shapes = list(TEMPLATES[layout]["panels"])
         for key, val in (boxes or {}).items():  # 单格位置微调：{"格号": [x0, y0, x1, y1]} 或 {"box": [...], "kind": "inset"}
             i = int(key) - 1
             if not 0 <= i < len(shapes):

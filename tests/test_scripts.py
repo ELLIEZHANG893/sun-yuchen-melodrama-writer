@@ -91,3 +91,11 @@ def test_multipage_storyboard_renders_each_page(tmp_path):
     for i in range(1, n + 1):
         assert (tmp_path / f"ep-{i:02d}.png").exists()
     assert (tmp_path / "ep-长条.png").exists()
+
+
+def test_custom_layout_uses_boxes_in_order():
+    st = rv.resolve_style("color")
+    boxes = {"1": [0, 0, 1, .5], "2": {"box": [0, .5, 1, 1], "kind": "free"}, "3": {"box": [.6, .6, .95, .8], "kind": "inset"}}
+    panels = rv.layout_panels("custom", 1080, 1920, False, False, st, boxes)
+    assert [p["kind"] for p in panels] == ["box", "free", "inset"]
+    assert panels[0]["box"][1] < panels[1]["box"][1]
