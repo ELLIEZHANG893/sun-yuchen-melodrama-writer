@@ -4,7 +4,7 @@
 
 ## 它会做什么
 
-1. **设定卡**：一句话卖点、题材公式、主角底牌、对手、情感线、核心秘密。
+1. **设定卡 + 伏笔清单**：一句话卖点、题材公式、主角底牌、对手、情感线、核心秘密；伏笔清单写清每条伏笔埋在哪、读者此刻以为什么、在哪一章回收。
 2. **分集节奏表**：每集的爽点、反转和集尾钩子类型，黄金三集和卡点位置都排好。
 3. **正文**：每次 3—5 集，章节默认 800—1500 字，剧本默认 1—2 分钟。
 4. **连载状态卡**：记录已揭秘密和未回收伏笔，说“继续”就能接着写不崩。
@@ -25,6 +25,10 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 ```
 
 图里的中文全部由脚本叠加，避免图像模型写错字。脚本会自动找系统中文字体（苹方 / 微软雅黑 / 思源黑体），找不到时用 `--font` 指定。
+
+### 和你一起对齐
+
+它不会闷头写完再交，而是在几个检查点停下来让你确认：先交设定卡、节奏表和伏笔清单；第 1 章写完先请你试读；之后每一批结尾都说一句“下一批打算”。你提的修改会记进 `story-bible.md` 的“已确认事项”，后面每一章都遵守。
 
 ## 研究基础
 
@@ -65,12 +69,14 @@ git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.cl
 - `SKILL.md`：工作流和输出规则。
 - `references/hook-and-pacing.md`：节奏、钩子、卡点手册。
 - `references/trope-library.md`：题材公式库。
+- `references/foreshadow-and-comedy.md`：伏笔清单的设计与回收、让故事好笑的六个手法。
 - `references/case-notes.md`：热门 IP 拆解笔记。
 - `references/voice-guide.md`：可选的零度冷叙述文风（原“零度狗血写作器”）。
 - `references/cover-guide.md`：封面方向、构图、配色、提示词结构。
 - `references/comic-guide.md`：宫格漫画选格、镜头、对白、人物一致性。
 - `references/design.md`：漫画两套固定画风（彩色暖调扁平图像小说风 / 黑白日式都市恋爱漫画风）的风格卡、配色、分格模板、排版、提示词前缀；人物设计三层结构（画风层 / 作品层 / 角色层）、定妆表、提示词拼装顺序和出图质检；可调项。
 - `examples/sample-12-episodes.md`：试跑样例（设定卡 + 节奏表 + 前三章）。
+- `examples/sample-foreshadowing.md`：深圳都市喜剧样例：伏笔清单、第 1 章，以及和用户来回对齐修改的过程。
 - `examples/sample-cover-and-comic.md`：同一个故事的外观卡、封面方案和第 1 章四宫格分镜。
 - `examples/ep01-comic.json`、`examples/ep01-comic-bw.json`：彩色 / 黑白分镜 JSON 样例，可直接用脚本预览。
 - `scripts/check_episodes.py`：检查每集字数和结尾钩子。
