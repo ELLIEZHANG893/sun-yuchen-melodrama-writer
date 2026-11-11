@@ -731,15 +731,13 @@ TEMPLATES = {
     },
     "s-bust": {
         "name": "半身压底",
-        "use": "顶部宽景 → 两格并排 → 底部：左边两个特写小格、右边一格，中间一个大的半身人物压在它们之间，下半身被页面底边切掉。人物的情绪时刻（紧张、愣住、下决心）",
+        "use": "顶部宽景 → 两格并排 → 底部一个大的半身人物压在左下，右边一格；人物下半身被页面底边切掉。人物的情绪时刻（紧张、愣住、下决心）。格子少、人物大",
         "panels": [
-            ([0, 0, 1, .22], "box", None),
-            ([0, .24, .49, .56], "box", None),
-            ([.51, .24, 1, .56], "box", None),
-            ([0, .6, .27, .78], "box", None),
-            ([0, .8, .27, 1], "box", None),
-            ([.73, .6, 1, 1], "box", None),
-            ([.14, .5, .86, 1.1], "sticker", None),
+            ([0, 0, 1, .24], "box", None),
+            ([0, .26, .49, .56], "box", None),
+            ([.51, .26, 1, .56], "box", None),
+            ([.64, .6, 1, 1], "box", None),
+            ([-.04, .5, .74, 1.1], "sticker", None),
         ],
     },
     "s-fly": {
@@ -762,7 +760,7 @@ TEMPLATES = {
             ([0, .3, .55, .62], "box", None),
             ([.55, .3, 1, .62], "box", None),
             ([0, .62, 1, 1], "box", None),
-            ([.5, .48, 1.0, 1.0], "sticker", None),
+            ([.7, .62, 1.03, 1.04], "sticker", None),
         ],
     },
 }
@@ -883,12 +881,19 @@ def mix(c1, c2, t):
     return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
 
 
-def cutout(img, tol=38):
-    """把纯色背景（白 / 奶油色等）抠掉：从图像四边往里“灌水”，和背景色接近的连通区域变透明。"""
+def cutout(img, tol=38, pocket=0.002):
+    """把纯色背景（白 / 奶油色等）抠掉。
+    1. 从图像四边往里“灌水”，和背景色接近的连通区域变透明；
+    2. 被线条围起来的背景（手臂和身体之间、发丝之间）也抠掉，但只抠面积大于 pocket（占全图比例）的，
+       眼白、高光这类小块白色保留。"""
     img = img.convert("RGB")
     small = img.copy()
     small.thumbnail((1100, 1100))
     w, h = small.size
+    px = small.load()
+    border = [px[x, 0] for x in range(0, w, 7)] + [px[x, h - 1] for x in range(0, w, 7)] + \
+             [px[0, y] for y in range(0, h, 7)] + [px[w - 1, y] for y in range(0, h, 7)]
+    bg = tuple(sorted(c[i] for c in border)[len(border) // 2] for i in range(3))
     marker = (255, 0, 255)
     work = small.copy()
     seeds = [(x, y) for x in range(0, w, max(1, w // 24)) for y in (0, h - 1)] + \
@@ -896,12 +901,36 @@ def cutout(img, tol=38):
     for sx, sy in seeds:
         if work.getpixel((sx, sy)) != marker:
             ImageDraw.floodfill(work, (sx, sy), marker, thresh=tol)
+    wp = work.load()
+
+    strict = max(8, tol // 2)  # 围起来的背景要和背景色非常接近才抠，避免把浅色皮肤、白衬衫当成背景
+
+    def near_bg(c):
+        return abs(c[0] - bg[0]) + abs(c[1] - bg[1]) + abs(c[2] - bg[2]) <= strict
+
+    # 被围起来的背景块：逐个灌成临时颜色，统计面积
+    temps, k = {}, 0
+    for y in range(0, h, 5):
+        for x in range(0, w, 5):
+            c = wp[x, y]
+            if c != marker and c not in temps and k < 250 and near_bg(c) and c[0:2] != (254, 0):
+                t = (254, 0, k)
+                ImageDraw.floodfill(work, (x, y), t, thresh=strict)
+                temps[t] = 0
+                k += 1
+    if temps:
+        for y in range(h):
+            for x in range(w):
+                c = wp[x, y]
+                if c in temps:
+                    temps[c] += 1
+    min_area = pocket * w * h
     mask = Image.new("L", (w, h), 255)
     mp = mask.load()
-    wp = work.load()
     for y in range(h):
         for x in range(w):
-            if wp[x, y] == marker:
+            c = wp[x, y]
+            if c == marker or (c in temps and temps[c] >= min_area):
                 mp[x, y] = 0
     mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
     mask = mask.filter(ImageFilter.MinFilter(3))           # 往里收一圈，去掉背景色的毛边
@@ -1000,10 +1029,10 @@ def covered_by_insets(panels):
     """找出被插入小格压住的格子：返回 {格号: [(压住它的格号, 位置, 比例)]}。"""
     out = {}
     for j, ins in enumerate(panels, 1):
-        if ins["kind"] != "inset":
+        if ins["kind"] not in ("inset", "sticker"):
             continue
         for i, p in enumerate(panels, 1):
-            if i == j or p["kind"] == "inset":
+            if i == j or p["kind"] in ("inset", "sticker"):
                 continue
             a, b = p["box"], ins["box"]
             x0, y0, x1, y1 = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
@@ -1046,7 +1075,7 @@ def cmd_sizes(a):
     print(f"版式 {a.layout}，{'黑白' if a.mode == 'bw' else '彩色'}风格，画布 {a.width}×{a.height}，共 {len(panels)} 格")
     cov = covered_by_insets(panels)
     for i, p in enumerate(panels, 1):
-        note = "".join(f"｜{pos}角约 {int(a * 100)}% 被第{j}格压住，出图时这块不要放人脸和关键物件"
+        note = "".join(f"｜{pos}角约 {int(a * 100)}% 被第{j}格压住，出图时这块不要放人脸、主要人物和关键物件"
                        for j, pos, a in cov.get(i, []))
         print("  " + panel_size_text(i, p) + note)
     print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
@@ -1154,7 +1183,7 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
     page_no = spec.get("page_no")
     if page_no:  # 页码：右下角小字
         f = font(24, st["title_font"])
-        d.text((W - st["margin"], H - st["margin"] / 2 - 4), page_no, font=f, fill=st["ink"], anchor="rm")
+        d.text((W / 2, H - st["margin"] / 2 - 2), page_no, font=f, fill=st["ink"], anchor="mm")  # 底部居中，避开右下角的贴纸人物
 
     canvas.save(out)
     print(f"已生成 {out}（{page_label}版式 {layout}，{'黑白' if bw else '彩色'}风格，{found}/{need} 格用了真实图片）")
