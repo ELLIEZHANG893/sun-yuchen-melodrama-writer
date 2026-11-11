@@ -160,11 +160,13 @@
 
 ### 4.1 画风层：人物画法（固定，不随作品变）
 
+画风层只管**怎么画**（线条、上色、高光、阴影的画法），不管**长什么样**。脸型、眼型、头身比、发型都属于角色层，每个角色不一样（见 [character-design.md](character-design.md)）。画法后缀里**不能写**“圆脸”“大圆眼”“杏眼”“尖下巴”这类形状词，否则所有角色都会被拉成同一张脸。
+
 | 部位 | 彩色｜暖调扁平图像小说风 | 黑白｜日式都市恋爱漫画风 |
 |---|---|---|
-| 头身比 | 成年人约 6.5—7 头身，青少年 / 儿童约 5.5—6 头身；整体偏可爱 | 约 7—7.5 头身，修长 |
-| 脸型 | 圆润鹅蛋脸，下巴短 | 瓜子或鹅蛋脸，下巴尖 |
-| 眼睛 | 大圆眼，一个大白高光，睫毛简化成两三笔 | 杏眼，长睫毛，瞳孔多层高光 |
+| 头身比 | 由角色决定；整体画法偏可爱、比例略夸张 | 由角色决定；整体画法偏修长 |
+| 脸型 | 由角色决定；轮廓线圆滑、线条少 | 由角色决定；轮廓线细、下颌线干净 |
+| 眼睛 | 形状由角色决定；画法统一：一个大白高光，睫毛简化成两三笔 | 形状由角色决定；画法统一：长睫毛，瞳孔多层高光 |
 | 鼻子 / 嘴 | 鼻子一个小点或短线；嘴小，开心时张成半圆 | 鼻子侧面一笔 + 鼻尖小阴影；嘴唇有一点光泽高光 |
 | 头发 | 大块面平涂，少量分缕线，发尾有弧度 | 细密发丝线，网点做高光带，发丝有飘动感 |
 | 皮肤 / 红晕 | 平涂肤色，腮红是平涂圆形，雀斑可选 | 白皮肤留白，红晕用斜排线 |
@@ -175,11 +177,11 @@
 **人物画法后缀**（接在画风前缀后面，每格照抄）：
 
 ```text
-彩色·英文：character design with round soft face, big round eyes with a single large highlight, tiny dot nose, small mouth, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks
-彩色·中文：圆润脸型，大圆眼只有一个大高光，鼻子是小点，小嘴，头发是大块面平涂加少量分缕线，脸颊平涂圆形腮红
+彩色·英文：eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks
+彩色·中文：眼睛只画一个大白高光、睫毛简化，鼻子是小点，头发是大块面平涂加少量分缕线，脸颊平涂圆形腮红
 
-黑白·英文：elegant character design with about 7-head proportions, slim jaw, almond-shaped eyes with long lashes and layered highlights, a single-stroke nose, glossy lips, finely drawn hair strands with screentone highlights, hatched blush lines
-黑白·中文：约 7 头身，下巴偏尖，杏眼长睫毛多层高光，鼻子一笔带过，嘴唇有光泽，细密发丝加网点高光，红晕用斜排线
+黑白·英文：eyes drawn with long lashes and layered highlights, a single-stroke nose, glossy lips, finely drawn hair strands with screentone highlights, hatched blush lines
+黑白·中文：眼睛画长睫毛和多层高光，鼻子一笔带过，嘴唇有光泽，细密发丝加网点高光，红晕用斜排线
 ```
 
 **表情库**（分镜里写表情时只从这里选，保证同一个情绪每次画法一样）：

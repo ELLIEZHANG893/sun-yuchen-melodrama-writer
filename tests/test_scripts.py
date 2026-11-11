@@ -174,3 +174,9 @@ def test_bubble_moves_off_face():
     box = (150, 50, 300, 150)
     moved = rv.clear_of_face(box, [0.4, 0.1, 0.7, 0.4], cell, 10)
     assert moved != box
+
+
+def test_example_storyboard_passes_lint():
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render_visuals.py"), "lint",
+                        os.path.join(ROOT, "examples", "ep01-pages.json")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout

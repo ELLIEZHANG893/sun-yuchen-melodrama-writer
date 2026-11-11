@@ -1336,7 +1336,8 @@ def cmd_lint(a):
                 mentioned = name in p.get("scene", "") or desc.split(",")[0].strip().lower() in low
                 if name in chars and desc not in prompt:
                     errors.append(f"{where}：画面里有{name}，但提示词里没有她/他完整的描述串")
-                elif mentioned and name not in chars:
+                elif mentioned and not any(c == name or c.startswith(name + "·") or name.startswith(c + "·")
+                                           for c in chars):
                     errors.append(f"{where}：画面描述提到了{name}，但 characters 里没列，提示词也可能缺描述串")
             people = re.search(r"\b(woman|women|man|men|girl|boy|person|people|she|he|her|his|hand|hands|sleeve|"
                                r"shoulder|face|figure|someone)\b", low)

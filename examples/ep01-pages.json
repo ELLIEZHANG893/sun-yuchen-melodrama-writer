@@ -1,120 +1,223 @@
 {
   "mode": "color",
-  "title": "第1章 19块9混进酒廊，被他当场拆台",
+  "title": "第1章 19块9混进酒廊",
   "footer": "他还知道多少？",
+  "cast": {
+    "江遥": {
+      "desc": "Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote",
+      "ref": "ref-江遥.png"
+    },
+    "梁屿": {
+      "desc": "Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch",
+      "ref": "ref-梁屿.png"
+    },
+    "梁屿·周一": {
+      "desc": "Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, crisp white shirt with sleeves rolled up, dark trousers, band-aid on one finger, cheap black digital watch",
+      "ref": "ref-梁屿.png"
+    },
+    "周可可": {
+      "desc": "Zhou Keke, 27-year-old Chinese woman, small and slender, heart-shaped face, big droopy innocent eyes, long straight jet-black hair with wispy air bangs and a pink claw clip, pastel pink fluffy cardigan, white pleated skirt, cartoon rabbit phone charm",
+      "ref": "ref-周可可.png"
+    },
+    "值班经理": {
+      "desc": "the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest",
+      "ref": "ref-值班经理.png"
+    },
+    "老板": {
+      "desc": "her boss, a 45-year-old Chinese man, stocky and round, receding hairline, thick black-framed glasses, navy suit with a crooked tie",
+      "ref": "ref-老板.png"
+    }
+  },
   "pages": [
     {
-      "layout": "custom",
-      "beat": "开场：19.9 混进酒廊",
-      "hook": "一眼认出“老板”",
+      "layout": "s-bust",
+      "beat": "19块9混进酒廊",
+      "hook": "在深圳，装是基本功",
       "panels": [
         {
-          "scene": "前台扫码，屏幕跳出红字“新人专享·单日有效”，前台一脸公事公办",
-          "image": "ep01-pg1-1.png",
+          "image": "ep01-v2-p1-1.png",
+          "scene": "前台扫码：江遥把手机屏幕朝向扫码枪，前台公事公办，屏幕跳出红字",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, standing at a sleek lounge reception desk at night and holding out her phone with the screen facing the receptionist, a QR code shown on the phone screen; a female receptionist in a black uniform points a handheld scanner at the phone screen with a flat businesslike face; a small desk monitor glows with a red warning banner (no readable text); Jiang Yao keeps a stiff polite smile with her chin raised, side view of both, wide medium shot, detailed background filling the entire frame, no blank areas, empty space at the top right for speech bubbles, aspect ratio 21:9, no text, no letters, no speech bubbles, no watermark, no signature",
           "caption": "湾景会·周五晚",
           "dialogue": [
             {
               "speaker": "前台",
-              "text": "团购券不能带朋友，也不能续时。",
+              "text": "团购券不能带朋友，\n也不能续时。",
               "type": "speech",
               "pos": "top-right"
             }
           ]
         },
         {
-          "scene": "前台给江遥系上荧光绿纸手环，她营业式微笑往下拽袖子",
-          "image": "ep01-p1.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "平时都是会员朋友带我来。",
-              "type": "speech",
-              "pos": "bottom-right"
-            }
-          ]
-        },
-        {
-          "scene": "大场景：三十楼落地窗前，江遥挺直站着眺望深圳湾；小头像回忆周可可说话",
-          "image": "ep01-pg1-3.png",
-          "caption": "同事周可可说：",
-          "dialogue": [
-            {
-              "speaker": "周可可",
-              "text": "五十多岁，深色西装，胸口金徽章。",
-              "type": "speech",
-              "pos": "top-right"
-            },
-            {
-              "speaker": "江遥",
-              "text": "拿不下来，品牌部优化两个人。",
-              "type": "monologue",
-              "pos": "middle-right"
-            }
-          ]
-        },
-        {
-          "scene": "插入小格：靠窗西装男胸口的金色徽章特写",
-          "image": "ep01-pg1-4.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "一眼就认出来了。",
-              "type": "monologue",
-              "pos": "bottom-right"
-            }
-          ]
-        }
-      ],
-      "boxes": {
-        "1": [
-          0,
-          0,
-          0.5,
-          0.22
-        ],
-        "2": [
-          0.5,
-          0,
-          1,
-          0.22
-        ],
-        "3": [
-          0,
-          0.22,
-          1,
-          1
-        ],
-        "4": {
-          "box": [
-            0.05,
-            0.63,
-            0.52,
-            0.95
+          "image": "ep01-v2-p1-2.png",
+          "scene": "前台给江遥系荧光绿纸手环",
+          "characters": [
+            "江遥"
           ],
-          "kind": "inset"
-        }
-      }
-    },
-    {
-      "layout": "custom",
-      "beat": "假电话被拆穿",
-      "hook": "那块板子越看越眼熟",
-      "panels": [
-        {
-          "scene": "全景：吧台，江遥举着手机对空气说话，远处卫衣男低头修电路板",
-          "image": "ep01-p2.png",
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, a receptionist's hands tying a neon green paper wristband around Jiang Yao's wrist at the reception desk, Jiang Yao looking away with a breezy fake-casual smile, medium close-up, detailed background filling the entire frame, no blank areas, keep the bottom-right corner simple with no faces or key objects (it will be covered), empty space at the top left for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
               "speaker": "江遥",
-              "text": "潜水？我考的是进阶证……",
+              "text": "平时都是会员\n朋友带我来。",
               "type": "speech",
               "pos": "top-left"
             }
           ]
         },
         {
-          "scene": "卫衣男梁屿侧脸，不抬头",
-          "image": "ep01-pg2-2.png",
+          "image": "ep01-v2-p1-3.png",
+          "scene": "江遥偷偷把手环往袖子里推到手肘",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, close-up of her pushing the neon green paper wristband up inside her cream coat sleeve toward the elbow, eyes glancing sideways sneakily, one sweat drop on her temple, lounge corridor behind her, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top left for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "十九块九，蹲了三个星期。",
+          "dialogue": []
+        },
+        {
+          "image": "ep01-v2-p1-4.png",
+          "scene": "袖子里别着的吊牌",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, close-up inside her cream coat sleeve: a white price tag pinned with a safety pin (no readable text), her fingers tucking it deeper, the warm lounge lights blurred behind, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top for speech bubbles, aspect ratio 9:16, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "吊牌 ¥4800\n周一退",
+          "dialogue": []
+        },
+        {
+          "image": "ep01-v2-p1-5.png",
+          "scene": "贴纸：江遥半身，下巴抬起，猫嘴得意笑，背后闪光，手拨波波头",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, half-body portrait from the waist up, facing three-quarter view, chin raised, smug cat-mouth grin with narrowed eyes and sparkles behind her, one hand flicking her bob, the canvas tote on her shoulder, dynamic expressive pose, isolated on a plain pure white background, no background, no ground shadow, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "在深圳，装，\n是打工人的\n第一项基本功。",
+              "type": "monologue",
+              "at": [
+                0.82,
+                0.18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-inset",
+      "beat": "目标：金徽章老板",
+      "hook": "一眼认出来了",
+      "panels": [
+        {
+          "image": "ep01-v2-p2-1.png",
+          "scene": "回忆：周可可趴在江遥工位边上小声说情报，画面淡化",
+          "characters": [
+            "周可可",
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Zhou Keke, 27-year-old Chinese woman, small and slender, heart-shaped face, big droopy innocent eyes, long straight jet-black hair with wispy air bangs and a pink claw clip, pastel pink fluffy cardigan, white pleated skirt, cartoon rabbit phone charm, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, flashback in soft desaturated tones with a white vignette: Zhou Keke leaning over Jiang Yao's office desk and whispering with one finger raised and a sweet smile, Jiang Yao listening intently, open-plan office, detailed background filling the entire frame, no blank areas, empty space at the bottom right for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "同事周可可说：",
+          "dialogue": [
+            {
+              "speaker": "周可可",
+              "text": "五十多岁，深色西装，\n胸口金徽章。",
+              "type": "speech",
+              "pos": "bottom-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p2-2.png",
+          "scene": "老板拍文件：优化两个人；江遥周可可吓到，老板侄子戴耳机打游戏毫不在意",
+          "characters": [
+            "老板",
+            "江遥",
+            "周可可"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, her boss, a 45-year-old Chinese man, stocky and round, receding hairline, thick black-framed glasses, navy suit with a crooked tie, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Zhou Keke, 27-year-old Chinese woman, small and slender, heart-shaped face, big droopy innocent eyes, long straight jet-black hair with wispy air bangs and a pink claw clip, pastel pink fluffy cardigan, white pleated skirt, cartoon rabbit phone charm, her boss slamming a folder on a desk and pointing, Jiang Yao and Zhou Keke behind him sweating buckets with shrinking pupils, while the boss's nephew, a chubby young man with big headphones, lounges with his feet up playing a game on his phone with the screen facing him, totally unbothered, office, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "品牌部一共三个人。",
+          "dialogue": [
+            {
+              "speaker": "老板",
+              "text": "拿不下来，\n优化两个人！",
+              "type": "shout",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p2-3.png",
+          "scene": "大场景：江遥坐在吧台背对镜头回头，看向靠窗桌的金徽章男人，星星眼",
+          "characters": [
+            "江遥",
+            "值班经理"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest, Jiang Yao at the bar in the foreground, turning her head over her shoulder with starry sparkling eyes, looking at the duty manager sitting at a window table in the background; floor-to-ceiling windows with the Shenzhen Bay night skyline, warm amber lounge lights, wide shot, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top right for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "一眼就认出来了。",
+              "type": "monologue",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p2-4.png",
+          "scene": "插入：金徽章特写，手拿平板",
+          "characters": [
+            "值班经理"
+          ],
+          "intensity": 1,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest, close-up of the small gold staff badge on his dark suit, his hand holding a slim tablet against his chest, softly blurred lounge behind, detailed background filling the entire frame, no blank areas, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
+        }
+      ]
+    },
+    {
+      "layout": "s-pop",
+      "beat": "假电话被拆穿",
+      "hook": "石化",
+      "panels": [
+        {
+          "image": "ep01-v2-p3-1.png",
+          "scene": "吧台：江遥举手机大声假电话，远处吧台尽头梁屿埋头修电路板",
+          "characters": [
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, Jiang Yao at the bar holding her phone to her ear with the screen facing her cheek, chin high, laughing loudly with an exaggerated show-off face; far at the end of the bar Liang Yu hunches over a small green circuit board with tweezers, not looking; Shenzhen Bay night view through the windows, wide shot, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 16:9, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "潜水？我考的\n是进阶证……",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p3-2.png",
+          "scene": "梁屿头也不抬，死鱼眼",
+          "characters": [
+            "梁屿"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, close-up, head down over the circuit board with tweezers, half-lidded deadpan dead-fish eyes, not looking up, warm bar light, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
               "speaker": "梁屿",
@@ -125,98 +228,93 @@
           ]
         },
         {
-          "scene": "梁屿近景，镊子停在电路板上",
-          "image": "ep01-p3.png",
+          "image": "ep01-v2-p3-3.png",
+          "scene": "江遥把手机屏幕朝下拍在吧台上，僵笑眉毛抽动",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, slapping her phone face-down on the bar counter, stiff smile with a twitching eyebrow, medium close-up, bar counter and bottles behind, detailed background filling the entire frame, no blank areas, empty space at the top right for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
-              "speaker": "梁屿",
-              "text": "零秒。",
+              "speaker": "江遥",
+              "text": "我在等\n对方说话。",
               "type": "speech",
-              "pos": "bottom-right"
+              "pos": "top-right"
             }
           ]
         },
         {
-          "scene": "无框大格：江遥把手机扣在吧台上，眯眼盯着那块绿色电路板",
-          "image": "ep01-pg2-4.png",
+          "image": "ep01-v2-p3-4.png",
+          "scene": "双人：梁屿依旧不抬头，江遥在左边僵住；右下角留空（会被贴纸压住）",
+          "characters": [
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, two-shot at the bar: Jiang Yao on the left frozen with a stiff smile, Liang Yu in the center still bent over the circuit board, deadpan, not looking at her; the right part of the bar counter is empty, warm lounge interior, detailed background filling the entire frame, no blank areas, keep the bottom-right corner simple with no faces or key objects (it will be covered), empty space at the top left for speech bubbles, aspect ratio 3:2, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "我在等对方说话。",
-              "type": "speech",
-              "pos": "top-left"
-            },
             {
               "speaker": "梁屿",
               "text": "等了四十秒。",
               "type": "speech",
-              "pos": "top-right"
-            },
-            {
-              "speaker": "江遥",
-              "text": "那块板子……越看越眼熟。",
-              "type": "monologue",
-              "pos": "bottom-left"
-            }
-          ]
-        }
-      ],
-      "boxes": {
-        "1": [
-          0,
-          0,
-          0.6,
-          0.24
-        ],
-        "2": [
-          0.6,
-          0,
-          1,
-          0.47
-        ],
-        "3": [
-          0,
-          0.24,
-          0.6,
-          0.47
-        ],
-        "4": {
-          "box": [
-            0,
-            0.47,
-            1,
-            1
-          ],
-          "kind": "free"
-        }
-      }
-    },
-    {
-      "layout": "custom",
-      "beat": "她赢一回合，又说漏嘴",
-      "hook": "“你也是会员？”",
-      "panels": [
-        {
-          "scene": "全景双人：江遥凑近指着电路板，梁屿镊子停住第一次抬眼",
-          "image": "ep01-p4.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "电量计量模块？",
-              "type": "speech",
               "pos": "top-left"
-            },
-            {
-              "speaker": "江遥",
-              "text": "城中村房东最怕这个。",
-              "type": "speech",
-              "pos": "top-right"
             }
           ]
         },
         {
-          "scene": "江遥手指比划，越说越起劲",
-          "image": "ep01-pg3-2.png",
+          "image": "ep01-v2-p3-5.png",
+          "scene": "贴纸：江遥石化裂开（头肩）",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 5,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, head and shoulders, turned to stone with cracks running across her face, frozen stiff smile, comedic, dynamic expressive pose, isolated on a plain pure white background, no background, no ground shadow, aspect ratio 9:16, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
+        }
+      ]
+    },
+    {
+      "layout": "4-hero",
+      "beat": "她赢一回合，又说漏嘴",
+      "hook": "你也是会员？",
+      "panels": [
+        {
+          "image": "ep01-v2-p4-1.png",
+          "scene": "江遥凑近指着电路板上的插座口，梁屿的镊子停住",
+          "characters": [
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, Jiang Yao leaning in and pointing at a small green circuit board with an electrical socket on it in Liang Yu's hands, eyes sharp and bright; Liang Yu's tweezers freezing mid-air, wide two-shot at the bar, warm lights, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 21:9, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "电量计量模块？\n做插座的？",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p4-2.png",
+          "scene": "梁屿镊子停在半空，眼睛微微睁大（对他来说已经是大反应）",
+          "characters": [
+            "梁屿"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, close-up of Liang Yu with tweezers frozen in mid-air, his half-lidded eyes opening slightly wider in quiet surprise, cool blue window light, detailed background filling the entire frame, no blank areas, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
+        },
+        {
+          "image": "ep01-v2-p4-3.png",
+          "scene": "江遥专业模式：眼神变尖、掰手指算账，背景是城中村和电表的线稿",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, in expert mode: sharp narrowed eyes, counting on her fingers while talking fast, behind her a light line-drawing of crowded urban-village buildings and electric meters, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 4:3, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
               "speaker": "江遥",
@@ -227,20 +325,14 @@
           ]
         },
         {
-          "scene": "江遥捂住嘴，眼神飘忽，大汗珠",
-          "image": "ep01-pg3-3.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "……说漏嘴了。",
-              "type": "monologue",
-              "pos": "bottom-right"
-            }
-          ]
-        },
-        {
-          "scene": "无框大格：梁屿终于抬头，看了她整整三秒",
-          "image": "ep01-pg3-4.png",
+          "image": "ep01-v2-p4-4.png",
+          "scene": "无框大格：江遥捂嘴冷汗如瀑（左前景），梁屿第一次抬头直视她",
+          "characters": [
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, Jiang Yao in the left foreground covering her mouth with both hands, sweating buckets, eyes darting sideways; Liang Yu on the right finally lifting his head and looking straight at her with calm half-lidded eyes, tweezers still in hand, isolated on a plain cream background, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
               "speaker": "梁屿",
@@ -256,76 +348,67 @@
             }
           ]
         }
-      ],
-      "boxes": {
-        "1": [
-          0,
-          0,
-          1,
-          0.36
-        ],
-        "2": [
-          0,
-          0.36,
-          0.45,
-          0.6
-        ],
-        "3": [
-          0.45,
-          0.36,
-          1,
-          0.6
-        ],
-        "4": {
-          "box": [
-            0,
-            0.6,
-            1,
-            1
-          ],
-          "kind": "free"
-        }
-      }
+      ]
     },
     {
-      "layout": "custom",
-      "beat": "手环、威士忌、泼大衣",
-      "hook": "吊牌 ¥4800 滑出来",
+      "layout": "4-splash",
+      "beat": "手环露馅、泼大衣",
+      "hook": "四千八",
       "panels": [
         {
-          "scene": "并排：她袖口露出荧光绿手环，笑容冻住；他面无表情嘴角一抽",
-          "image": "ep01-p5.png",
+          "image": "ep01-v2-p5-1.png",
+          "scene": "梁屿视线往下，落在她手肘露出的荧光绿手环",
+          "characters": [
+            "梁屿",
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, close-up of Liang Yu's half-lidded eyes glancing down at Jiang Yao's elbow, where a neon green paper wristband peeks out of her cream coat sleeve, bar light, detailed background filling the entire frame, no blank areas, aspect ratio 2:3, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
+        },
+        {
+          "image": "ep01-v2-p5-2.png",
+          "scene": "江遥冻住的笑加大汗珠，一根手指把免费粉色特调推开",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, frozen polite smile with one giant sweat drop, pushing a free pink mocktail aside with one finger, bar counter, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 3:5, no text, no letters, no speech bubbles, no watermark, no signature",
           "dialogue": [
             {
               "speaker": "江遥",
               "text": "今年的新款\n会员手环。",
-              "type": "speech",
-              "pos": "top-right"
-            },
-            {
-              "speaker": "梁屿",
-              "text": "嗯。挺环保。",
-              "type": "speech",
-              "pos": "top-left"
-            }
-          ],
-          "text_scale": 0.9
-        },
-        {
-          "scene": "她把免费特调推到一边，指着酒单上的“188”，面不改色；他在旁边喝冰水",
-          "image": "ep01-pg4-2.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "威士忌，谢谢。",
               "type": "speech",
               "pos": "top-left"
             }
           ]
         },
         {
-          "scene": "大格：散场人群撞到她胳膊，整杯威士忌泼在大衣上，她强行大笑，他按住她手腕",
-          "image": "ep01-p7.png",
+          "image": "ep01-v2-p5-3.png",
+          "scene": "梁屿面无表情，嘴角抽了一下",
+          "characters": [
+            "梁屿"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, deadpan face, the corner of his mouth twitching as he holds back a laugh, sipping a glass of ice water, bar counter, detailed background filling the entire frame, no blank areas, empty space at the top right for speech bubbles, aspect ratio 2:3, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "嗯。\n挺环保。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p5-4.png",
+          "scene": "无框大格+速度线：路人撞到她胳膊，威士忌泼满奶白大衣，酒杯飞起，吊牌从袖子甩出，江遥下巴掉地白圈眼头发竖起，梁屿伸手",
+          "characters": [
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 5,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, dynamic action: someone bumps Jiang Yao's arm, a whiskey glass flying through the air and whiskey splashing across the front of her cream-white coat, a white price tag flying out of her sleeve, her jaw dropping comically to the floor with eyes turned into blank white circles and hair standing on end; Liang Yu beside her reaching out a hand, isolated on a plain cream background, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
           "sfx": {
             "text": "哗啦！",
             "pos": "top-right"
@@ -333,166 +416,198 @@
           "dialogue": [
             {
               "speaker": "江遥",
-              "text": "这件穿好几年了，旧衣服！",
-              "type": "speech",
-              "pos": "top"
-            }
-          ]
-        },
-        {
-          "scene": "吊牌特写：从驼色袖口滑出来的白色吊牌，印着¥4800，晃来晃去",
-          "image": "ep01-pg4-4.png",
-          "caption": "吊牌：¥4800",
-          "dialogue": []
-        }
-      ],
-      "boxes": {
-        "1": [
-          0,
-          0,
-          1,
-          0.26
-        ],
-        "2": [
-          0,
-          0.26,
-          1,
-          0.52
-        ],
-        "3": [
-          0,
-          0.52,
-          1,
-          0.76
-        ],
-        "4": [
-          0,
-          0.76,
-          1,
-          1
-        ]
-      }
-    },
-    {
-      "layout": "4-hero",
-      "beat": "三指、点赞通知",
-      "hook": "他好像什么都没看见",
-      "panels": [
-        {
-          "scene": "全景双人：他递来两张干纸巾，按住她的手腕",
-          "image": "ep01-pg5-1.png",
-          "dialogue": [
-            {
-              "speaker": "梁屿",
-              "text": "羊绒别用湿巾。\n按，别擦。",
-              "type": "speech",
-              "pos": "top-right"
-            }
-          ]
-        },
-        {
-          "scene": "江遥愣住，若有所思",
-          "image": "ep01-pg5-2.png",
-          "dialogue": [
-            {
-              "speaker": "梁屿",
-              "text": "蒸汽离面料三指。",
-              "type": "speech",
-              "pos": "top-left"
-            },
-            {
-              "speaker": "江遥",
-              "text": "三指……怎么这么耳熟？",
+              "text": "四千八。",
               "type": "monologue",
-              "pos": "bottom-right"
-            }
-          ]
-        },
-        {
-          "scene": "手机锁屏通知特写：点赞破10万",
-          "image": "ep01-pg5-3.png",
-          "caption": "【点赞破10万】沙尾村月租1500的单间",
-          "dialogue": []
-        },
-        {
-          "scene": "无框大格：她一把把手机翻过去抬眼；他低头拧螺丝，好像什么都没看见",
-          "image": "ep01-pg5-4.png",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "“深圳城中村生活志”，三十万粉。没人知道是我。",
-              "type": "monologue",
-              "pos": "top-left"
+              "pos": "bottom-left"
             }
           ]
         }
       ]
     },
     {
-      "layout": "custom",
-      "beat": "值班经理、周一会议室",
-      "hook": "“江经理，大衣退了吗？”",
-      "boxes": {
-        "1": [
-          0,
-          0,
-          1,
-          0.25
-        ],
-        "2": [
-          0,
-          0.25,
-          0.55,
-          0.47
-        ],
-        "3": [
-          0.55,
-          0.25,
-          1,
-          0.47
-        ],
-        "4": [
-          0,
-          0.47,
-          1,
-          0.756
-        ],
-        "5": [
-          0,
-          0.756,
-          1,
-          1
-        ]
-      },
+      "layout": "s-bust",
+      "beat": "旧衣服、三指、点赞通知",
+      "hook": "没人知道是我",
       "panels": [
         {
-          "scene": "递名片给西装男，他指了指她的荧光绿手环",
-          "image": "ep01-p6.png",
+          "image": "ep01-v2-p6-1.png",
+          "scene": "江遥对撞她的路人强行大笑，吊牌从袖子里滑出来晃着",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, forcing a huge bright laugh and waving off a passer-by seen from behind, while a white price tag (no readable text) slides out of her whiskey-stained cream coat sleeve and dangles, lounge interior, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 21:9, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "吊牌 ¥4800",
           "dialogue": [
             {
-              "speaker": "值班经理",
-              "text": "我是值班经理。",
+              "speaker": "江遥",
+              "text": "没事没事，这件\n穿好几年了，旧衣服！",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p6-2.png",
+          "scene": "梁屿按住她拿湿巾的手腕，递来干纸巾",
+          "characters": [
+            "梁屿",
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu calmly pressing Jiang Yao's wrist to stop her rubbing her stained cream coat with a wet wipe, handing her two dry napkins, medium two-shot at the bar, detailed background filling the entire frame, no blank areas, keep the bottom-right corner simple with no faces or key objects (it will be covered), empty space at the top right and bottom right for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "羊绒别用湿巾。\n按，别擦。",
               "type": "speech",
               "pos": "top-right"
             },
             {
-              "speaker": "值班经理",
-              "text": "19.9体验券，\n十点到期。",
+              "speaker": "梁屿",
+              "text": "蒸汽离面料三指。",
               "type": "speech",
               "pos": "bottom-right"
             }
-          ],
-          "text_scale": 0.9
+          ]
         },
         {
-          "scene": "电梯镜面反光：他把她推开的特调一口喝完",
-          "image": "ep01-p8.png",
-          "caption": "电梯门合上前——",
+          "image": "ep01-v2-p6-3.png",
+          "scene": "江遥愣住，手指抵着下巴，眼神放空：三指怎么这么耳熟",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, pausing with a puzzled faraway look, one finger on her chin, napkins pressed to her coat, soft lilac color-block background with a few sparkles, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top left for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "三指……\n怎么这么耳熟？",
+              "type": "thought",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p6-4.png",
+          "scene": "手机屏幕朝上放在吧台，锁屏亮起大通知和爱心",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 1,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, close-up of her smartphone lying screen-up on the bar counter next to a pack of wet wipes, the lock screen lighting up with a big notification banner and a heart with confetti (no readable text), her hand reaching for it, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top for speech bubbles, aspect ratio 9:16, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "【点赞破10万】\n沙尾村月租1500的单间",
           "dialogue": []
         },
         {
-          "scene": "地铁上，江遥看手机微信：周可可回了个可爱表情包",
-          "image": "ep01-pg6-3.png",
+          "image": "ep01-v2-p6-5.png",
+          "scene": "贴纸：江遥半身，把手机屏幕朝下死死捂在胸口，眼睛乱飘冷汗如瀑",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 4,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, half-body portrait from the waist up, clutching her phone face-down against her chest with both hands, eyes darting sideways in panic, sweating buckets, dynamic expressive pose, isolated on a plain pure white background, no background, no ground shadow, aspect ratio 2:3, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "“深圳城中村生活志”，\n三十万粉。\n没人知道是我。",
+              "type": "monologue",
+              "at": [
+                0.82,
+                0.16
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "4-inset",
+      "beat": "值班经理",
+      "hook": "他喝掉了那杯特调",
+      "panels": [
+        {
+          "image": "ep01-v2-p7-1.png",
+          "scene": "江遥双手递名片给靠窗的值班经理",
+          "characters": [
+            "江遥",
+            "值班经理"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest, Jiang Yao bowing slightly and holding out a business card with both hands to the duty manager at a window table, bright professional smile, Shenzhen Bay night view, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "江遥",
+              "text": "您好，我是\n启航品牌的江遥——",
+              "type": "speech",
+              "pos": "top-left"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p7-2.png",
+          "scene": "值班经理礼貌微笑，指了指她的荧光绿手环",
+          "characters": [
+            "值班经理",
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, the duty manager smiling politely and pointing at the neon green wristband on Jiang Yao's wrist, medium shot by the window table, detailed background filling the entire frame, no blank areas, empty space at the top right for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "值班经理",
+              "text": "我是今晚的\n值班经理。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p7-3.png",
+          "scene": "大场景：值班经理说体验券到期；江遥灵魂从嘴里飘出；远处吧台梁屿憋笑抖肩；左下角留空（插入小格）",
+          "characters": [
+            "值班经理",
+            "江遥",
+            "梁屿"
+          ],
+          "intensity": 5,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, the duty manager, a 55-year-old Chinese man with slicked-back gray hair, square jaw, dark suit, small gold staff badge on his chest, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, the duty manager speaking kindly on the right; Jiang Yao in the center frozen with her ghost-like soul floating out of her open mouth; in the background at the bar Liang Yu turned away with his shoulders shaking as he holds back laughter; keep the lower-left area simple, warm lounge, wide shot, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top right for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "值班经理",
+              "text": "您的19.9体验券，\n十点到期。",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p7-4.png",
+          "scene": "插入：电梯镜面门反光里，梁屿拿起她推开的粉色特调一口喝完",
+          "characters": [
+            "梁屿"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, faded olive shell jacket over a gray hoodie, cargo pants, band-aid on one finger, cheap black digital watch, seen as a reflection in closing mirrored elevator doors: Liang Yu at the bar picking up a leftover pink mocktail and drinking it in one gulp, framed by the edges of the doors, detailed background filling the entire frame, no blank areas, empty space at the top left for speech bubbles, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "电梯门合上前——",
+          "dialogue": []
+        }
+      ]
+    },
+    {
+      "layout": "custom",
+      "beat": "周一会议室",
+      "hook": "大衣退了吗？",
+      "panels": [
+        {
+          "image": "ep01-v2-p8-1.png",
+          "scene": "地铁车厢，江遥换了平底鞋，帆布包里露出高跟鞋，手机屏幕朝向她，看同事发来的微信（画面里只有江遥）",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 2,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, now in flat shoes, high heels sticking out of the canvas tote, standing in a crowded Shenzhen metro car holding a handrail, looking at her phone with the screen facing her (over-the-shoulder view) showing a chat with a cute sticker (no readable text), the train interior with passengers filling the whole frame, detailed background filling the entire frame, no blank areas, empty space at the top right for speech bubbles, aspect ratio 4:3, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "11号线换7号线",
           "dialogue": [
             {
               "speaker": "周可可",
@@ -503,32 +618,106 @@
           ]
         },
         {
-          "image": "ep01-pg6-4.png",
-          "scene": "周一早上，南山科技园楼下，江遥裹紧那件沾过酒、退不掉的驼色大衣，抬头看拓界大楼，深吸一口气",
-          "caption": "周一·南山科技园",
-          "dialogue": [
-            {
-              "speaker": "江遥",
-              "text": "大衣退不掉了，只能穿着上。",
-              "type": "monologue",
-              "pos": "bottom-left"
-            }
-          ]
+          "image": "ep01-v2-p8-2.png",
+          "scene": "周可可窝在沙发看手机，甜笑，眼睛被阴影遮住只剩反光（读者先知道）",
+          "characters": [
+            "周可可"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Zhou Keke, 27-year-old Chinese woman, small and slender, heart-shaped face, big droopy innocent eyes, long straight jet-black hair with wispy air bangs and a pink claw clip, pastel pink fluffy cardigan, white pleated skirt, cartoon rabbit phone charm, curled up on a sofa at night looking at her phone with the screen facing her, a sweet smile while her eyes are hidden in shadow with a cold glint, cozy apartment, detailed background filling the entire frame, no blank areas, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
         },
         {
-          "scene": "周一会议室：白衬衫梁屿坐主位抬眼，江遥石化",
-          "image": "ep01-p9.png",
-          "caption": "拓界会议室",
+          "image": "ep01-v2-p8-3.png",
+          "scene": "周一会议室：老板紧张地整理领带；江遥（大衣上淡淡酒渍）；周可可在旁边低头打字",
+          "characters": [
+            "老板",
+            "江遥",
+            "周可可"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, her boss, a 45-year-old Chinese man, stocky and round, receding hairline, thick black-framed glasses, navy suit with a crooked tie, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, Zhou Keke, 27-year-old Chinese woman, small and slender, heart-shaped face, big droopy innocent eyes, long straight jet-black hair with wispy air bangs and a pink claw clip, pastel pink fluffy cardigan, white pleated skirt, cartoon rabbit phone charm, Monday, a glass conference room: her boss nervously straightening his crooked tie and leaning toward Jiang Yao, who wears the cream coat with a faint whiskey stain and an awkward smile; Zhou Keke beside them typing on her phone with the screen facing her, wide shot, detailed background filling the entire frame, no blank areas, empty space at the top left and top right for speech bubbles, aspect ratio 21:9, no text, no letters, no speech bubbles, no watermark, no signature",
+          "caption": "周一·拓界会议室",
           "dialogue": [
             {
-              "speaker": "梁屿",
-              "text": "江经理，大衣退了吗？",
+              "speaker": "老板",
+              "text": "你周五不是说见到\n他们老板了吗？",
+              "type": "speech",
+              "pos": "top-left"
+            },
+            {
+              "speaker": "江遥",
+              "text": "……见到了一个\n值班经理。",
               "type": "speech",
               "pos": "top-right"
             }
           ]
+        },
+        {
+          "image": "ep01-v2-p8-4.png",
+          "scene": "大格：梁屿穿白衬衫坐在主位抬眼看她，淡淡地笑；江遥站在桌对面；左下角留空（贴纸）",
+          "characters": [
+            "梁屿·周一",
+            "江遥",
+            "老板"
+          ],
+          "intensity": 3,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Liang Yu, 32-year-old Chinese man, very tall and lanky with sloped shoulders, long face, half-lidded sanpaku eyes, thick straight brows, no glasses, wavy black hair in a tiny low ponytail, crisp white shirt with sleeves rolled up, dark trousers, band-aid on one finger, cheap black digital watch, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, her boss, a 45-year-old Chinese man, stocky and round, receding hairline, thick black-framed glasses, navy suit with a crooked tie, Liang Yu seated at the head of a long glass conference table on the right half of the frame, lifting his eyes to look straight at Jiang Yao with a faint half smile, a stack of proposals in front of him; Jiang Yao standing across the table in the stained cream coat; her boss bowing beside her; keep the lower-left area simple, bright cool office light, wide shot, detailed background filling the entire frame, no blank areas, keep the bottom-left corner simple with no faces or key objects (it will be covered), empty space at the top right for speech bubbles, aspect ratio 1:1, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": [
+            {
+              "speaker": "梁屿",
+              "text": "江经理，\n大衣退了吗？",
+              "type": "speech",
+              "pos": "top-right"
+            }
+          ]
+        },
+        {
+          "image": "ep01-v2-p8-5.png",
+          "scene": "贴纸：江遥头肩，白圈眼，小O嘴，头发竖起（出格反应）",
+          "characters": [
+            "江遥"
+          ],
+          "intensity": 5,
+          "prompt": "flat-color graphic novel illustration, clean even dark brown outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, subtle cream paper texture, expressive faces, lighthearted comedic mood, bright flat colors, exaggerated cartoon expressions, eyes drawn with one large white highlight and simplified lashes, tiny dot nose, flat-colored hair in large shapes with a few strand lines, round flat blush on the cheeks, Jiang Yao, 28-year-old Chinese woman, petite, round apple-cheeked face, big upturned cat eyes with winged eyeliner, bold red lips, dark brown chin-length bob with blunt bangs and flipped ends, oversized cream-white coat over a navy pinstripe shirt, wide-leg trousers, pointed heels, huge canvas tote, head and shoulders, eyes turned into blank white circles, tiny O-shaped mouth, hair standing on end, comedic shock, dynamic expressive pose, isolated on a plain pure white background, no background, no ground shadow, aspect ratio 3:4, no text, no letters, no speech bubbles, no watermark, no signature",
+          "dialogue": []
         }
-      ]
+      ],
+      "boxes": {
+        "1": [
+          0,
+          0,
+          0.55,
+          0.24
+        ],
+        "2": [
+          0.55,
+          0,
+          1,
+          0.24
+        ],
+        "3": [
+          0,
+          0.26,
+          1,
+          0.45
+        ],
+        "4": [
+          0,
+          0.47,
+          1,
+          1
+        ],
+        "5": {
+          "box": [
+            -0.03,
+            0.72,
+            0.38,
+            1.04
+          ],
+          "kind": "sticker"
+        }
+      }
     }
   ]
 }
