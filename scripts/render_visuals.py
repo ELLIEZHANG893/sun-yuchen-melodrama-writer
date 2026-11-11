@@ -682,7 +682,7 @@ def parse_grid(s):
         sys.exit(f"版式写法：自由分格模板（{names}），或规整网格 列x行（如 2x2、3x3、1x4），收到：{s}")
 
 
-def layout_panels(layout, W, H, has_title, has_footer, st):
+def layout_panels(layout, W, H, has_title, has_footer, st, boxes=None):
     """返回 [{box, poly, kind, fx}]，顺序即阅读顺序。box 是外接矩形，文字按它摆放。"""
     m, g = st["margin"], st["gutter"]
     top = m + (TITLE_BAND if has_title else 0)
@@ -690,7 +690,17 @@ def layout_panels(layout, W, H, has_title, has_footer, st):
     if layout in TEMPLATES:
         X0, Y0, CW, CH = m, top, W - 2 * m, bottom - top
         out = []
-        for shape, kind, fx in TEMPLATES[layout]["panels"]:
+        shapes = list(TEMPLATES[layout]["panels"])
+        for key, val in (boxes or {}).items():  # 单格位置微调：{"格号": [x0, y0, x1, y1]} 或 {"box": [...], "kind": "inset"}
+            i = int(key) - 1
+            if not 0 <= i < len(shapes):
+                sys.exit(f"boxes 里的格号 {key} 超出了版式 {layout} 的 {len(shapes)} 格")
+            old = shapes[i]
+            if isinstance(val, dict):
+                shapes[i] = (val.get("box", old[0]), val.get("kind", old[1]), val.get("fx", old[2]))
+            else:
+                shapes[i] = (val, old[1], old[2])
+        for shape, kind, fx in shapes:
             fpts = rect_poly(shape) if not isinstance(shape[0], (tuple, list)) else [tuple(v) for v in shape]
             if st["rtl"]:
                 fpts = [(1 - x, y) for x, y in fpts][::-1]
@@ -744,10 +754,10 @@ def poly_mask(slot, shrink=0):
     return mask
 
 
-def paste_free(canvas, img, slot):
-    """无框格：四边羽化，画面像直接画在纸上。"""
+def paste_free(canvas, img, slot, feather=0.07):
+    """无框格：四边羽化，画面像直接画在纸上。feather 是羽化宽度占短边的比例。"""
     box = slot["box"]
-    f = int(min(box[2] - box[0], box[3] - box[1]) * 0.07)
+    f = max(2, int(min(box[2] - box[0], box[3] - box[1]) * feather))
     mask = poly_mask(slot, f).filter(ImageFilter.GaussianBlur(f / 2))
     canvas.paste(img, box[:2], mask)
 
@@ -777,6 +787,27 @@ def draw_speedlines(canvas, slot, ink):
     canvas.paste(layer, box[:2], layer)
 
 
+def covered_by_insets(panels):
+    """找出被插入小格压住的格子：返回 {格号: [(压住它的格号, 位置, 比例)]}。"""
+    out = {}
+    for j, ins in enumerate(panels, 1):
+        if ins["kind"] != "inset":
+            continue
+        for i, p in enumerate(panels, 1):
+            if i == j or p["kind"] == "inset":
+                continue
+            a, b = p["box"], ins["box"]
+            x0, y0, x1, y1 = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
+            if x1 <= x0 or y1 <= y0:
+                continue
+            area = (x1 - x0) * (y1 - y0) / ((a[2] - a[0]) * (a[3] - a[1]))
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            v = "上" if cy < (a[1] + a[3]) / 2 else "下"
+            hz = "左" if cx < (a[0] + a[2]) / 2 else "右"
+            out.setdefault(i, []).append((j, hz + v, area))
+    return out
+
+
 def panel_size_text(i, p):
     x0, y0, x1, y1 = p["box"]
     return f"格 {i}｜{x1 - x0}×{y1 - y0}｜建议比例 {nearest_ratio(x1 - x0, y1 - y0)}{KIND_LABEL[p['kind']]}" + \
@@ -800,8 +831,11 @@ def cmd_sizes(a):
     st = resolve_style(a.mode)
     panels = layout_panels(a.layout, a.width, a.height, True, True, st)
     print(f"版式 {a.layout}，{'黑白' if a.mode == 'bw' else '彩色'}风格，画布 {a.width}×{a.height}，共 {len(panels)} 格")
+    cov = covered_by_insets(panels)
     for i, p in enumerate(panels, 1):
-        print("  " + panel_size_text(i, p))
+        note = "".join(f"｜{pos}角约 {int(a * 100)}% 被第{j}格压住，出图时这块不要放人脸和关键物件"
+                       for j, pos, a in cov.get(i, []))
+        print("  " + panel_size_text(i, p) + note)
     print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
 
 
@@ -815,7 +849,7 @@ def cmd_comic(a):
     layout = a.layout or spec.get("layout") or ("m4-closeup" if bw else "4-inset")
     W, H = spec.get("canvas", [CANVAS_W, CANVAS_H])
     title, footer = spec.get("title", ""), spec.get("footer", "")
-    slots = layout_panels(layout, W, H, bool(title), bool(footer), st)
+    slots = layout_panels(layout, W, H, bool(title), bool(footer), st, spec.get("boxes"))
     panels = spec.get("panels", [])
     need = len(slots)
     if len(panels) != need:
@@ -847,15 +881,15 @@ def cmd_comic(a):
                              tuple(p.get("focus", (0.5, 0.5))), fill)
         found += ok
         if kind == "free":
-            paste_free(canvas, img, slot)
-            if slot["fx"] == "speed" or p.get("speedlines"):
+            paste_free(canvas, img, slot, float(p.get("feather", 0.07)))
+            if p.get("speedlines", slot["fx"] == "speed"):
                 draw_speedlines(canvas, slot, st["ink"])
             continue
         if kind == "inset":  # 插入小格外圈留一道底色，像贴在大格上
             ring = max(8, st["gutter"] * 0.6)
             d.rectangle((box[0] - ring, box[1] - ring, box[2] + ring, box[3] + ring), fill=st["bg"])
         canvas.paste(img, box[:2], poly_mask(slot))
-        if slot["fx"] == "speed" or p.get("speedlines"):
+        if p.get("speedlines", slot["fx"] == "speed"):
             draw_speedlines(canvas, slot, st["ink"])
         pts = slot["poly"]
         d.line(pts + [pts[0], pts[1]], fill=st["ink"], width=st["border"], joint="curve")
@@ -863,7 +897,7 @@ def cmd_comic(a):
     for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面
         box = slot["box"]
         w, h = box[2] - box[0], box[3] - box[1]
-        base_size = min(38, max(21, min(w, h * 0.9) * 0.075))
+        base_size = min(38, max(21, min(w, h * 0.9) * 0.075)) * float(p.get("text_scale", 1))
         stack = {}
         if p.get("caption"):
             size_, side = draw_caption(canvas, box, p["caption"], base_size, st)
