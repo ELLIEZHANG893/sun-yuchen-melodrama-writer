@@ -99,3 +99,24 @@ def test_custom_layout_uses_boxes_in_order():
     panels = rv.layout_panels("custom", 1080, 1920, False, False, st, boxes)
     assert [p["kind"] for p in panels] == ["box", "free", "inset"]
     assert panels[0]["box"][1] < panels[1]["box"][1]
+
+
+@pytest.mark.skipif(not has_cjk_font(), reason="没有中文字体")
+def test_draft_then_overlay(tmp_path):
+    script = os.path.join(ROOT, "scripts", "render_visuals.py")
+    r = subprocess.run([sys.executable, script, "comic", os.path.join(ROOT, "examples", "ep01-pages.json"),
+                        "--draft", "--page", "1", "--out", str(tmp_path / "ep.png")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    draft = tmp_path / "ep-01-草稿.png"
+    assert draft.exists()
+    spec = {"mode": "color", "pages": [{"image": str(draft), "texts": [
+        {"speaker": "A", "text": "测试对白", "at": [0.5, 0.2], "tail": [0.4, 0.3]},
+        {"text": "旁白", "type": "caption", "at": [0.1, 0.05]},
+        {"text": "砰！", "type": "sfx", "at": [0.8, 0.5]},
+        {"text": "独白", "type": "monologue", "at": [0.3, 0.7]}]}]}
+    sp = tmp_path / "ov.json"
+    sp.write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
+    r = subprocess.run([sys.executable, script, "overlay", str(sp), "--out", str(tmp_path / "final.png")],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert (tmp_path / "final.png").exists()

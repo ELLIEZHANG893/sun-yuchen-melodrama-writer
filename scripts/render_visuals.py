@@ -329,12 +329,12 @@ def bubble_shape(d, box, kind, vertical, ow, ink):
         d.rounded_rectangle(box, radius=r, fill="white", outline=ink, width=ow)
 
 
-def draw_tail(d, box, cell, kind, vertical, ow, ink):
-    """从气泡指向格子中心的尾巴。"""
+def draw_tail(d, box, cell, kind, vertical, ow, ink, target=None):
+    """从气泡指向说话人的尾巴；没给 target 时指向格子中心。"""
     if kind == "shout":
         return
     x0, y0, x1, y1 = box
-    cx, cy = (cell[0] + cell[2]) / 2, (cell[1] + cell[3]) / 2
+    cx, cy = target or ((cell[0] + cell[2]) / 2, (cell[1] + cell[3]) / 2)
     mx, my = (x0 + x1) / 2, (y0 + y1) / 2
     rx, ry = (x1 - x0) / 2, (y1 - y0) / 2
     below = cy > my
@@ -406,7 +406,7 @@ def avoid_overlap(box, placed, cell, pad):
     return (x0, y0, x1, y1)
 
 
-def draw_monologue(d, cell, text, base_size, st, stack, placed, pad, pos):
+def draw_monologue(d, cell, text, base_size, st, stack, placed, pad, pos, at=None):
     f = font(base_size * 1.15, "sans")
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
     stroke = max(3, int(f.size / 7))
@@ -418,8 +418,11 @@ def draw_monologue(d, cell, text, base_size, st, stack, placed, pad, pos):
         lh = line_h(f) * 1.1
         tw, th = max(text_w(d, ln, f) for ln in lines), lh * len(lines)
     bw_, bh = tw + stroke * 2, th + stroke * 2
-    box = place_box(cell, pos or "middle-left", bw_, bh, pad, stack, st["vertical"])
-    box = avoid_overlap(box, placed, cell, pad)
+    if at:
+        box = at_box(cell, at, bw_, bh)
+    else:
+        box = place_box(cell, pos or "middle-left", bw_, bh, pad, stack, st["vertical"])
+        box = avoid_overlap(box, placed, cell, pad)
     placed.append(box)
     if st["vertical"]:
         draw_vertical(d, box[2] - stroke, box[1] + stroke, cols, f, st["ink"], stroke, "white")
@@ -428,6 +431,19 @@ def draw_monologue(d, cell, text, base_size, st, stack, placed, pad, pos):
         for ln in lines:
             d.text((box[0] + stroke, y), ln, font=f, fill=st["ink"], stroke_width=stroke, stroke_fill="white")
             y += lh
+
+
+def frac_point(cell, fp):
+    if not fp:
+        return None
+    return (cell[0] + (cell[2] - cell[0]) * fp[0], cell[1] + (cell[3] - cell[1]) * fp[1])
+
+
+def at_box(cell, at, w, h):
+    cx, cy = frac_point(cell, at)
+    x = min(max(cx - w / 2, cell[0] + 4), cell[2] - 4 - w)
+    y = min(max(cy - h / 2, cell[1] + 4), cell[3] - 4 - h)
+    return (x, y, x + w, y + h)
 
 
 def draw_dialogue(canvas, cell, items, base_size, stack, st):
@@ -442,7 +458,7 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
         if not text:
             continue
         if kind == "monologue":  # 浮空独白：没有气泡和框，粗一点的字加白描边，直接浮在人物旁边
-            draw_monologue(d, cell, text, base_size, st, stack, placed, pad, it.get("pos"))
+            draw_monologue(d, cell, text, base_size, st, stack, placed, pad, it.get("pos"), it.get("at"))
             continue
         f = font(base_size * (1.1 if kind == "shout" else 1.0), st["text_font"])
         if vertical:
@@ -454,11 +470,14 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
             tw, th = max(text_w(d, ln, f) for ln in lines), lh * len(lines)
             tw, th = tw + f.size * 1.5, th + f.size
         ow_, oh_ = bubble_outer(kind, tw, th, vertical)
-        box = place_box(cell, it.get("pos"), ow_, oh_, pad, stack, vertical)
-        box = avoid_overlap(box, placed, cell, pad)
+        if it.get("at"):  # 精确位置：气泡中心在格子内的比例坐标
+            box = at_box(cell, it["at"], ow_, oh_)
+        else:
+            box = place_box(cell, it.get("pos"), ow_, oh_, pad, stack, vertical)
+            box = avoid_overlap(box, placed, cell, pad)
         placed.append(box)
         bubble_shape(d, box, kind, vertical, st["bubble_line"], ink)
-        draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink)
+        draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink, frac_point(cell, it.get("tail")))
         mx, my = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
         if vertical:
             draw_vertical(d, mx + tw / 2, my - th / 2, cols, f, ink)
@@ -851,8 +870,11 @@ def cmd_sizes(a):
     print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
 
 
-def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_label=""):
-    """排一页。spec 是一页的分镜（layout / panels / title / footer / boxes ...）。返回 (用了真图的格数, 总格数)。"""
+def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_label="", draft=False):
+    """排一页。spec 是一页的分镜（layout / panels / title / footer / boxes ...）。返回 (用了真图的格数, 总格数)。
+    draft=True 时不画对白、旁白、音效、标题和页码，得到给生图平台做整页重绘用的“版式草稿”。"""
+    if draft:
+        spec = dict(spec, _draft=True, title="", footer="", page_no="")
     mode = "bw" if (force_bw or spec.get("mode", "color") == "bw") else "color"
     bw = mode == "bw"
     st = resolve_style(mode, spec.get("style"))
@@ -904,7 +926,9 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
         pts = slot["poly"]
         d.line(pts + [pts[0], pts[1]], fill=st["ink"], width=st["border"], joint="curve")
 
-    for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面
+    for i, (slot, p) in items:  # 第二遍：文字压在所有画面上面（草稿模式不画字）
+        if spec.get("_draft"):
+            break
         box = slot["box"]
         w, h = box[2] - box[0], box[3] - box[1]
         base_size = min(38, max(21, min(w, h * 0.9) * 0.075)) * float(p.get("text_scale", 1))
@@ -945,7 +969,7 @@ def cmd_comic(a):
     stem = os.path.splitext(a.out or os.path.splitext(a.spec)[0] + ".png")[0]
     pages = spec.get("pages")
     if not pages:
-        render_page(spec, base_dir, stem + ".png", a.bw, a.layout)
+        render_page(spec, base_dir, stem + ("-草稿.png" if a.draft else ".png"), a.bw, a.layout, draft=a.draft)
         return
     if len(pages) > 10:
         print(f"  · 这一章有 {len(pages)} 页，超过建议的最多 10 页，考虑拆成两章", file=sys.stderr)
@@ -962,10 +986,10 @@ def cmd_comic(a):
         if n == total and "footer" not in page and spec.get("footer"):
             ps["footer"] = spec["footer"]
         ps.setdefault("page_no", f"{n} / {total}")
-        out = f"{stem}-{n:02d}.png"
-        render_page(ps, base_dir, out, a.bw, a.layout, f"第 {n} 页 ")
+        out = f"{stem}-{n:02d}{'-草稿' if a.draft else ''}.png"
+        render_page(ps, base_dir, out, a.bw, a.layout, f"第 {n} 页 ", a.draft)
         outs.append(out)
-    if a.strip and outs:
+    if a.strip and outs and not a.draft:
         ims = [Image.open(o) for o in outs]
         strip = Image.new("RGB", (ims[0].width, sum(i.height for i in ims)), "white")
         y = 0
@@ -975,6 +999,53 @@ def cmd_comic(a):
         strip.save(stem + "-长条.png")
         print(f"已生成 {stem}-长条.png（{len(ims)} 页拼成一张竖长图，方便发条漫平台）")
 
+
+
+def cmd_overlay(a):
+    """第二步：给生图平台重绘好的整页漫画叠对白。
+    JSON：{"mode": "color", "pages": [{"image": "page-01.png", "texts": [
+        {"speaker": "江遥", "text": "……", "type": "speech", "at": [0.7, 0.12], "tail": [0.62, 0.25]},
+        {"text": "湾景会·周五晚", "type": "caption", "at": [0.12, 0.05]},
+        {"text": "哗啦！", "type": "sfx", "at": [0.8, 0.6]} ]}]}
+    at / tail 是整页上的比例坐标（0—1），at 是气泡中心，tail 是尾巴指向的说话人位置。"""
+    with open(a.spec, encoding="utf-8") as fh:
+        spec = json.load(fh)
+    base_dir = os.path.dirname(os.path.abspath(a.spec))
+    st = resolve_style("bw" if spec.get("mode") == "bw" else "color", spec.get("style"))
+    pages = spec.get("pages") or [spec]
+    for n, pg in enumerate(pages, 1):
+        path = pg["image"] if os.path.isabs(pg["image"]) else os.path.join(base_dir, pg["image"])
+        canvas = Image.open(path).convert("RGB")
+        W, H = canvas.size
+        cell = (0, 0, W, H)
+        base = W * 0.034 * float(pg.get("text_scale", spec.get("text_scale", 1)))
+        stack = {}
+        for t in pg.get("texts", []):
+            kind = t.get("type", "speech")
+            if kind == "caption":
+                f = font(base * 0.82, st["text_font"])
+                d = ImageDraw.Draw(canvas)
+                lines = str(t["text"]).split("\n")
+                tw = max(text_w(d, ln, f) for ln in lines)
+                lh = line_h(f) * 1.1
+                pad = base * 0.4
+                bw_, bh = tw + pad * 2, lh * len(lines) + pad * 2
+                x0, y0, _, _ = at_box(cell, t["at"], bw_, bh)
+                d.rectangle((x0, y0, x0 + bw_, y0 + bh), fill=st["caption_fill"], outline=st["ink"], width=3)
+                for k, ln in enumerate(lines):
+                    d.text((x0 + pad, y0 + pad + k * lh), ln, font=f, fill=st["ink"])
+            elif kind == "sfx":
+                fx, fy = t["at"]
+                vert = "top" if fy < 0.33 else ("bottom" if fy > 0.66 else "middle")
+                hz = "left" if fx < 0.33 else ("right" if fx > 0.66 else "center")
+                sub = (int(W * max(0, fx - 0.2)), int(H * max(0, fy - 0.1)), int(W * min(1, fx + 0.2)), int(H * min(1, fy + 0.1)))
+                draw_sfx(canvas, sub, {"text": t["text"], "pos": f"{vert}-{hz}"}, base, st)
+            else:
+                draw_dialogue(canvas, cell, [t], base, stack, st)
+        stem = os.path.splitext(a.out or os.path.splitext(a.spec)[0] + ".png")[0]
+        out = f"{stem}-{n:02d}.png" if len(pages) > 1 else stem + ".png"
+        canvas.save(out)
+        print(f"已生成 {out}（{len(pg.get('texts', []))} 处文字）")
 
 
 def cmd_cover(a):
@@ -1086,6 +1157,11 @@ def main():
     m.add_argument("--bw", action="store_true", help="强制黑白风格")
     m.add_argument("--page", help="多页时只排其中几页，如 2 或 2,3")
     m.add_argument("--strip", action="store_true", help="多页时另外把所有页拼成一张竖长图")
+    m.add_argument("--draft", action="store_true", help="只排画面不画字，输出给生图平台整页重绘用的版式草稿")
+
+    o = sub.add_parser("overlay", help="第二步：给平台重绘好的整页漫画叠对白（按比例坐标放气泡）")
+    o.add_argument("spec", help="叠字 JSON")
+    o.add_argument("--out")
     m.add_argument("--out")
 
     sub.add_parser("layouts", help="列出自由分格模板和适用场景")
@@ -1102,7 +1178,7 @@ def main():
     if a.cmd == "layouts":
         return cmd_layouts(a)
     setup_fonts(a.font, a.serif_font)
-    {"cover": cmd_cover, "comic": cmd_comic}[a.cmd](a)
+    {"cover": cmd_cover, "comic": cmd_comic, "overlay": cmd_overlay}[a.cmd](a)
 
 
 if __name__ == "__main__":

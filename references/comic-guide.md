@@ -69,6 +69,66 @@
 - 完整样例：`examples/ep01-pages.json`（第 1 章拆成 6 页）。
 - `"layout": "custom"`：整页格子都由 `boxes` 给出（格号从 1 开始，按格号顺序阅读，每格可写 `{"box": [...], "kind": "free"}` 或 `"inset"`）。用户已经出过一批图时，用它让版式迁就图的比例，避免重出。
 
+## 两步出图：先分格，再整页重绘
+
+分格出图好控制（每格单独返工、人物稳定、细节清楚），整页出图更连贯（格与格的动作、光影、构图是一体的）。两步走把两边的好处都拿到：
+
+### 第一步：分格草稿
+
+1. 按本手册出分页表 → 每格提示词 → 用户在生图平台逐格出图（挂定妆表做参考）。
+2. 用户把图发回来，按分镜 JSON 排版，逐格检查人物、表情、内容对不对。不对的只重出那一格。
+3. 用户确认后，导出**版式草稿**（只有画面和格框，没有对白、旁白、音效和标题）：
+
+```bash
+python scripts/render_visuals.py comic ep01-pages.json --draft      # 输出 ep01-pages-01-草稿.png ……
+```
+
+第一步排出来的页（不加 `--draft`）本身就是一张完整的漫画页。如果第二步的重绘效果不好，直接用它就行。
+
+### 第二步：整页重绘
+
+每页上传 **1 张版式草稿 + 出场人物的定妆表**，配一条整页重绘提示词。模板：
+
+```text
+Redraw the attached comic page draft as one finished, cohesive vertical comic page, aspect ratio 9:16.
+Keep exactly the same panel layout, panel borders, panel order and the composition of every panel.
+Keep every character identical to the attached character reference sheets: [出场角色的英文描述串].
+Unify line weight, colors and lighting across all panels in this style: [画风前缀] [本章调性后缀].
+Fix any inconsistent faces, hands or details. Make the action flow naturally from panel to panel.
+Panels: 1) [这一格的画面一句话] 2) …
+[文字方案 A 或 B]
+No watermark, no signature.
+```
+
+**文字方案**（第一次做整页重绘时问用户选哪个，记进 `story-bible.md`）：
+
+- **A：让平台直接画字**。在提示词里写：`Add speech bubbles with exactly this simplified Chinese text, written correctly: panel 1, [人物]: "……"; …`。最省事，但每页都要逐字检查错别字，错了只能重出。
+- **B：留白，由脚本叠字（推荐）**。在提示词里写：`Leave clean empty space for speech bubbles in each panel. No text, no letters, no speech bubbles.` 图回来以后，看图找到每句台词的位置（气泡中心）和说话人的位置（尾巴指向），写成叠字 JSON：
+
+```json
+{"mode": "color", "pages": [
+  {"image": "page-01.png", "texts": [
+    {"speaker": "江遥", "text": "平时都是会员朋友带我来。", "at": [0.78, 0.18], "tail": [0.7, 0.24]},
+    {"text": "湾景会·周五晚", "type": "caption", "at": [0.12, 0.03]},
+    {"text": "哗啦！", "type": "sfx", "at": [0.85, 0.58]},
+    {"speaker": "江遥", "text": "大衣退不掉了。", "type": "monologue", "at": [0.3, 0.7]}
+  ]}
+]}
+```
+
+```bash
+python scripts/render_visuals.py overlay ep01-overlay.json        # 输出 ep01-overlay-01.png ……
+```
+
+`at`、`tail` 都是整页上的比例坐标（0—1）。`type` 可选 `speech`、`shout`、`thought`、`monologue`、`caption`、`sfx`。在能看图的环境里，由 agent 自己看重绘后的整页来定坐标，排完再看一遍，确认气泡没有挡脸。
+
+### 重绘后的检查
+
+- 人物有没有被“重绘”走样？和定妆表对照标志物、发型、配色。
+- 格子数量、顺序、版式有没有变？少格或多格的页不要用。
+- 第一步确认过的关键物件（吊牌、手环、电路板）还在吗？
+- 某一页重绘不理想：换种子或换说法重出这一页；还不行就用第一步排好的那一页。
+
 ## 选格
 
 ### 四宫格：起承转合
