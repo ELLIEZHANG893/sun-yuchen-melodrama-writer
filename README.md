@@ -9,7 +9,7 @@
 3. **正文**：每次 3—5 集，章节默认 800—1500 字，剧本默认 1—2 分钟。
 4. **连载状态卡**：记录已揭秘密和未回收伏笔，说“继续”就能接着写不崩。
 5. **封面方案**（可选）：3 个方向的画面、构图和中英文提示词，出图后用脚本叠上片名和卖点。
-6. **竖屏宫格漫画**（可选）：把一章做成彩色或黑白的四宫格 / 九宫格分镜，每格提示词 + 分镜 JSON，出图后用脚本拼版、加对白气泡。
+6. **竖屏宫格漫画**（可选）：把一章做成彩色或黑白的四宫格 / 九宫格分镜，每格提示词 + 分镜 JSON，出图后用脚本拼版、加对白气泡。画风固定两套：彩色是暖调扁平图像小说风，黑白是日式都市恋爱漫画风（竖排宋体对白）；第一次做漫画时会先给你看风格卡，问你要不要微调。
 
 ### 关于出图
 
@@ -67,10 +67,11 @@ git clone https://github.com/ELLIEZHANG893/sun-yuchen-melodrama-writer.git ~/.cl
 - `references/case-notes.md`：热门 IP 拆解笔记。
 - `references/voice-guide.md`：可选的零度冷叙述文风（原“零度狗血写作器”）。
 - `references/cover-guide.md`：封面方向、构图、配色、提示词结构。
-- `references/comic-guide.md`：宫格漫画选格、镜头、对白、风格词、人物一致性。
+- `references/comic-guide.md`：宫格漫画选格、镜头、对白、人物一致性。
+- `references/design.md`：漫画两套固定画风（彩色暖调扁平图像小说风 / 黑白日式都市恋爱漫画风）的风格卡、配色、排版、提示词前缀和可调项。
 - `examples/sample-12-episodes.md`：试跑样例（设定卡 + 节奏表 + 前三章）。
 - `examples/sample-cover-and-comic.md`：同一个故事的外观卡、封面方案和第 1 章四宫格分镜。
-- `examples/ep01-comic.json`：分镜 JSON 样例，可直接用脚本预览。
+- `examples/ep01-comic.json`、`examples/ep01-comic-bw.json`：彩色 / 黑白分镜 JSON 样例，可直接用脚本预览。
 - `scripts/check_episodes.py`：检查每集字数和结尾钩子。
 - `scripts/render_visuals.py`：封面叠字、宫格漫画排版、黑白转换。
 - `agents/openai.yaml`：Codex 界面元数据。

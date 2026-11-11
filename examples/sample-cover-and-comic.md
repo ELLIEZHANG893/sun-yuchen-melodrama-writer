@@ -1,7 +1,7 @@
 # 示例：封面方案 + 第 1 章四宫格分镜
 
 > 接 `sample-12-episodes.md` 的故事。用户输入：“给这部剧做个封面，再把第 1 章做成彩色四宫格。”
-> 采用默认值：封面 3:4、3 个方向；漫画 2x2、彩色、韩漫条漫风格。
+> 采用默认值：封面 3:4、3 个方向；漫画 2x2、彩色（暖调扁平图像小说风，用户确认不微调）。
 
 ## 角色外观卡
 
@@ -45,7 +45,14 @@ B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选�
 
 ## 第 1 章四宫格分镜（2x2，彩色）
 
-风格前缀（每格原样复制）：韩漫条漫风格，干净线条，柔和赛璐璐上色，精致人物，电影感光影 / Korean webtoon style, clean line art, soft cel shading, detailed characters, cinematic lighting
+先确认画风（第一次做漫画时）：
+
+> 这部漫画准备用【彩色｜暖调扁平图像小说风】：奶油色纸底 + 粗黑格框，干净的黑色描线、平涂上色，配色是暖粉、蜜桃、天蓝、奶黄、鼠尾草绿；背景用纯色块衬托情绪，人物大眼睛、腮红，汗珠和抖动线表现紧张；气泡白底黑框横排，音效字是大号黑色手写体。
+> 直接用这个风格，还是想微调？可以调：色调、线条粗细、人物比例、背景写实程度、对白横排 / 竖排、字体。
+
+用户回答“就这样”，写进 `story-bible.md` 的“画风”一节。
+
+风格前缀（每格原样复制，来自 design.md）：flat-color graphic novel illustration, clean even black outlines, minimal shading, soft warm palette of coral pink, peach, sky blue, butter yellow and sage green, cream paper texture, solid pastel color-block background behind the character, large expressive eyes, rosy blush, freckles, cute and expressive, comic emotion marks like sweat drops and shake lines
 
 ```text
 格1 起｜中景｜病房，母亲把笔硬塞进林晚手里，指甲掐进她手背；病床上的年轻男人扭头看墙
@@ -75,4 +82,4 @@ B、C 的提示词按 A 的结构写，人物描述照抄外观卡。用户选�
 python scripts/render_visuals.py comic examples/ep01-comic.json
 ```
 
-换成黑白九宫格时：风格前缀改成“black and white manga, screentone shading, bold ink lines, high contrast”，按九宫格选格表把第 1 章拆成 9 格，JSON 里写 `"layout": "3x3"`、`"mode": "bw"`。
+换成黑白时：贴黑白风格卡再确认一次，风格前缀换成 design.md 第二节的黑白前缀，JSON 里写 `"mode": "bw"`，对白会自动竖排。黑白四宫格样例见 `examples/ep01-comic-bw.json`；九宫格按选格表把第 1 章拆成 9 格，写 `"layout": "3x3"`。

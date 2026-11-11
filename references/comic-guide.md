@@ -58,7 +58,7 @@
 - **旁白框** `caption`：时间、地点或一行关键信息，不超过 10 字。
 - **音效字** `sfx`：啪、砰、哗啦……每张漫画最多 2 处。
 - **底部一行** `footer`：可选，放下集预告或悬念句；标题 `title` 用章节标题。
-- 气泡位置 `pos`：`top-left`、`top-right`、`top`、`bottom-left`、`bottom-right`、`bottom`、`middle-left`、`middle-right`。放在说话人头部的对侧上方，不要盖住人脸；提示词里要给气泡留出空白区域。
+- 气泡位置 `pos`（黑白竖排时默认右上，同一位置的两个气泡并排，右边先读）：`top-left`、`top-right`、`top`、`bottom-left`、`bottom-right`、`bottom`、`middle-left`、`middle-right`。放在说话人头部的对侧上方，不要盖住人脸；提示词里要给气泡留出空白区域。
 
 ## 分镜表格式（展示给用户）
 
@@ -85,16 +85,19 @@
 
 负面提示里一定要写 **no speech bubbles**：不然很多模型会自己画空气泡或乱码字。
 
-## 风格词表
+## 画风
 
-| 风格 | 中文风格前缀 | 英文风格前缀 |
-|---|---|---|
-| 彩色·韩漫条漫（默认） | 韩漫条漫风格，干净线条，柔和赛璐璐上色，精致人物，电影感光影 | Korean webtoon style, clean line art, soft cel shading, detailed characters, cinematic lighting |
-| 彩色·国漫厚涂 | 国漫厚涂风格，戏剧化光影，高饱和度 | Chinese manhua style, painterly rendering, dramatic lighting, rich colors |
-| 黑白·日漫网点 | 黑白漫画，日式网点，浓重墨线，高对比 | black and white manga, screentone shading, bold ink lines, high contrast |
-| 黑白·线稿速写 | 黑白线稿，干净钢笔线条，少量排线阴影 | black and white line art, clean pen lines, light hatching |
+画风只有两套，全部定义在 [design.md](design.md)，这里不再另列风格词：
 
-黑白模式：提示词用黑白风格前缀，同时 JSON 里写 `"mode": "bw"`。如果出来的图还是彩色，脚本会统一转成高对比黑白，整组色调一致。
+| 色彩 | 画风 | 提示词前缀 | JSON |
+|---|---|---|---|
+| 彩色（默认） | 暖调扁平图像小说风 | design.md 第一节 | `"mode": "color"` |
+| 黑白 | 日式都市恋爱漫画风 | design.md 第二节 | `"mode": "bw"` |
+
+- 第一次给这部作品做漫画时，先贴风格卡问用户是否微调（流程见 design.md 文末），确认后写进 `story-bible.md`。
+- `mode` 决定脚本的版式：彩色是奶油底、粗黑框、横排黑体对白；黑白是白底、细框、竖排宋体对白和长椭圆气泡。
+- 用户微调过的项，用 `"style": {...}` 覆盖，键名见 design.md 第四节。
+- 黑白模式下如果出来的图还是彩色，脚本会统一转成高对比黑白，整组色调一致。
 
 ## 人物一致性（最容易翻车的地方）
 
@@ -130,15 +133,17 @@
 ```
 
 - `panels` 数量要等于 列×行。
+- 可选 `"style": {"rtl": true}` 等：覆盖画风版式，见 design.md。
 - 可选 `focus: [0.5, 0.3]`：裁切焦点（横、纵 0—1），人脸被裁掉时调小第二个数。
 - 图还没出时也可以先运行脚本，缺图的格会显示占位和画面描述，用来预览文字排版。
 
-完整样例见 `examples/ep01-comic.json`。
+完整样例见 `examples/ep01-comic.json`（彩色）和 `examples/ep01-comic-bw.json`（黑白竖排）。
 
 ## 交付前自检
 
 - 最后一格是不是停在和正文结尾一样的钩子上？
 - 每格是否只有一个动作？相邻两格景别是否不同？
+- 每格提示词是否以确认过的画风前缀开头？
 - 每个气泡是否 ≤12 字？整张漫画的字是否少到扫一眼就能读完？
 - 每格提示词里人物描述是否和外观卡一字不差？
 - 负面提示里是否写了“不要文字、不要气泡”？

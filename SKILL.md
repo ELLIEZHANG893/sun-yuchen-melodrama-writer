@@ -15,6 +15,7 @@ description: 中文短剧 / 网文连载写作器。用户给出主题和大致�
 - [零度冷叙述文风](references/voice-guide.md)：只有用户要求“冷叙述 / 克制 / 零度狗血 / 孙式”文风时读。
 - [封面手册](references/cover-guide.md)：只有用户要做封面时读。
 - [竖屏宫格漫画手册](references/comic-guide.md)：只有用户要做四宫格 / 九宫格 / 漫画时读。
+- [漫画画风设计规范](references/design.md)：彩色 / 黑白两套固定画风、风格卡、可调项。做漫画时和漫画手册一起读。
 - [试跑示例](examples/sample-12-episodes.md)：设定卡、节奏表、前三章和状态卡的完整样例。第一次使用时读，对齐输出格式和长度。
 
 ## 第一步：收齐输入，缺的用默认值
@@ -146,20 +147,29 @@ Lin Wan: 27-year-old Chinese woman, shoulder-length straight black hair, oval fa
 
 不用为这些参数提问，开头一行写明采用了哪些默认值即可。
 
-### 3. 输出
+### 3. 漫画先确认画风（每部作品只问一次）
+
+画风固定两套，见[画风设计规范](references/design.md)：彩色 = 暖调扁平图像小说风，黑白 = 日式都市恋爱漫画风。
+
+- `story-bible.md` 里还没有“画风”一节时：按用户要的色彩贴出对应的**风格卡**，只问一个问题——“直接用这个风格，还是想微调？”，并列出可调项（色调、线条、人物比例、背景、对白横排 / 竖排、字体）。等用户回答后再出分镜。
+- 用户说可以：用默认风格。用户要微调：只改提到的项，写进“画风”一节，同时改提示词前缀和分镜 JSON 的 `"style"`。
+- 已经有“画风”一节：直接沿用，不再询问。用户说换成另一种色彩时，再按上面流程问一次。
+- 用户不在场或无人值守：用默认风格，开头一行写明。
+
+### 4. 输出
 
 - **封面**：按[封面手册](references/cover-guide.md)出方案，每个方案含画面、构图、配色、中英文提示词和一条排版命令。
-- **漫画**：按[漫画手册](references/comic-guide.md)出分镜表（每格：景别、画面、对白、提示词），再给一份分镜 JSON。四宫格最后一格、九宫格第九格必须是本章集尾钩子。
+- **漫画**：按[漫画手册](references/comic-guide.md)出分镜表（每格：景别、画面、对白、提示词），再给一份分镜 JSON。每格提示词以确认过的画风前缀开头；四宫格最后一格、九宫格第九格必须是本章集尾钩子。
 - 结尾告诉用户三步：① 先用外观卡出每个人物的定妆图，用作后续参考图；② 按文件名保存每格图片，和 JSON 放同一文件夹；③ 运行排版命令：
 
 ```bash
 python scripts/render_visuals.py cover --image cover-a.png --title "片名" --tagline "一句话卖点" --tag "女频·逆袭"
-python scripts/render_visuals.py comic visuals/ep01-comic.json          # 加 --bw 转黑白
+python scripts/render_visuals.py comic visuals/ep01-comic.json          # JSON 里 "mode": "bw" 即黑白风格
 ```
 
 图还没出时也可以先跑命令，缺图的位置会显示占位，用来预览文字排版。
 
-在能写文件、能运行脚本的环境里：外观卡和选定的封面方案写进 `story-bible.md`；分镜表和 JSON 存到 `visuals/` 目录（如 `visuals/ep01-comic.md`、`visuals/ep01-comic.json`）；用户放入图片后，你直接运行脚本，并查看生成的图，检查气泡是否挡脸、文字是否溢出。
+在能写文件、能运行脚本的环境里：外观卡、确认后的画风和选定的封面方案写进 `story-bible.md`；分镜表和 JSON 存到 `visuals/` 目录（如 `visuals/ep01-comic.md`、`visuals/ep01-comic.json`）；用户放入图片后，你直接运行脚本，并查看生成的图，检查气泡是否挡脸、文字是否溢出。
 
 ## 原创与安全边界
 
