@@ -483,6 +483,32 @@ def at_box(cell, at, w, h):
     return (x, y, x + w, y + h)
 
 
+def clear_of_face(box, face, cell, pad):
+    """face 是说话人脸部区域（格子内比例坐标 [x0, y0, x1, y1]）。气泡最多盖住脸的 30%；超过就往远离脸的方向挪。"""
+    if not face:
+        return box
+    fx0, fy0 = cell[0] + (cell[2] - cell[0]) * face[0], cell[1] + (cell[3] - cell[1]) * face[1]
+    fx1, fy1 = cell[0] + (cell[2] - cell[0]) * face[2], cell[1] + (cell[3] - cell[1]) * face[3]
+    farea = max(1, (fx1 - fx0) * (fy1 - fy0))
+
+    def cover(b):
+        x0, y0, x1, y1 = max(b[0], fx0), max(b[1], fy0), min(b[2], fx1), min(b[3], fy1)
+        return max(0, x1 - x0) * max(0, y1 - y0) / farea
+
+    if cover(box) <= 0.3:
+        return box
+    w, h = box[2] - box[0], box[3] - box[1]
+    cands = [(fx0 - pad - w, box[1]), (fx1 + pad, box[1]), (box[0], fy0 - pad - h), (box[0], fy1 + pad)]
+    best = box
+    for x, y in cands:
+        x = min(max(x, cell[0] + 4), cell[2] - 4 - w)
+        y = min(max(y, cell[1] + 4), cell[3] - 4 - h)
+        b = (x, y, x + w, y + h)
+        if cover(b) < cover(best):
+            best = b
+    return best
+
+
 def draw_dialogue(canvas, cell, items, base_size, stack, st):
     d = ImageDraw.Draw(canvas)
     cw, ch = cell[2] - cell[0], cell[3] - cell[1]
@@ -514,6 +540,7 @@ def draw_dialogue(canvas, cell, items, base_size, stack, st):
         else:
             box = place_box(cell, it.get("pos"), ow_, oh_, pad, stack, vertical)
             box = avoid_overlap(box, placed, cell, pad)
+        box = clear_of_face(box, it.get("face"), cell, pad)
         placed.append(box)
         bubble_shape(d, box, kind, vertical, st["bubble_line"], ink, oval)
         draw_tail(d, box, cell, kind, vertical, st["bubble_line"], ink, frac_point(cell, it.get("tail")), oval)
@@ -881,60 +908,57 @@ def mix(c1, c2, t):
     return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
 
 
-def cutout(img, tol=38, pocket=0.002):
+def cutout(img, tol=38, pocket=0.0):
     """把纯色背景（白 / 奶油色等）抠掉。
-    1. 从图像四边往里“灌水”，和背景色接近的连通区域变透明；
-    2. 被线条围起来的背景（手臂和身体之间、发丝之间）也抠掉，但只抠面积大于 pocket（占全图比例）的，
-       眼白、高光这类小块白色保留。"""
+
+    颜色判断用 RGB 三个通道的差值之和（不用 Pillow floodfill 的“单通道最大差”——那样暖棕色头发和奶油底色
+    在红色通道只差 30 多，会被整片当成背景抠掉）。
+    1. 从图像四边往里灌：和背景色足够接近的连通区域变透明；
+    2. 可选（pocket > 0）：被线条围起来的背景（手臂和身体之间）也抠掉，只抠面积大于 pocket（占全图比例）的块。
+       默认关闭：围起来的白色到底是背景还是眼白、高光、白衬衫，脚本分不清，大白眼会被抠出洞。
+       需要时在分镜里给这一格写 "pocket": 0.01，排完一定要看图检查。"""
+    from collections import deque
     img = img.convert("RGB")
     small = img.copy()
-    small.thumbnail((1100, 1100))
+    small.thumbnail((900, 900))
     w, h = small.size
-    px = small.load()
-    border = [px[x, 0] for x in range(0, w, 7)] + [px[x, h - 1] for x in range(0, w, 7)] + \
-             [px[0, y] for y in range(0, h, 7)] + [px[w - 1, y] for y in range(0, h, 7)]
+    px = list(small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata())
+    border = [px[x] for x in range(0, w, 5)] + [px[(h - 1) * w + x] for x in range(0, w, 5)] + \
+             [px[y * w] for y in range(0, h, 5)] + [px[y * w + w - 1] for y in range(0, h, 5)]
     bg = tuple(sorted(c[i] for c in border)[len(border) // 2] for i in range(3))
-    marker = (255, 0, 255)
-    work = small.copy()
-    seeds = [(x, y) for x in range(0, w, max(1, w // 24)) for y in (0, h - 1)] + \
-            [(x, y) for y in range(0, h, max(1, h // 24)) for x in (0, w - 1)]
-    for sx, sy in seeds:
-        if work.getpixel((sx, sy)) != marker:
-            ImageDraw.floodfill(work, (sx, sy), marker, thresh=tol)
-    wp = work.load()
+    dist = [abs(c[0] - bg[0]) + abs(c[1] - bg[1]) + abs(c[2] - bg[2]) for c in px]
+    loose, strict = tol * 1.6, max(12, tol * 0.7)
+    BG, POCKET = 1, 2
+    label = bytearray(w * h)
 
-    strict = max(8, tol // 2)  # 围起来的背景要和背景色非常接近才抠，避免把浅色皮肤、白衬衫当成背景
+    def grow(starts, limit, mark):
+        q = deque(i for i in starts if not label[i] and dist[i] <= limit)
+        for i in q:
+            label[i] = mark
+        members = []
+        while q:
+            i = q.popleft()
+            members.append(i)
+            x, y = i % w, i // w
+            for j in ((i - 1) if x else -1, (i + 1) if x < w - 1 else -1, (i - w) if y else -1, (i + w) if y < h - 1 else -1):
+                if j >= 0 and not label[j] and dist[j] <= limit:
+                    label[j] = mark
+                    q.append(j)
+        return members
 
-    def near_bg(c):
-        return abs(c[0] - bg[0]) + abs(c[1] - bg[1]) + abs(c[2] - bg[2]) <= strict
-
-    # 被围起来的背景块：逐个灌成临时颜色，统计面积
-    temps, k = {}, 0
-    for y in range(0, h, 5):
-        for x in range(0, w, 5):
-            c = wp[x, y]
-            if c != marker and c not in temps and k < 250 and near_bg(c) and c[0:2] != (254, 0):
-                t = (254, 0, k)
-                ImageDraw.floodfill(work, (x, y), t, thresh=strict)
-                temps[t] = 0
-                k += 1
-    if temps:
-        for y in range(h):
-            for x in range(w):
-                c = wp[x, y]
-                if c in temps:
-                    temps[c] += 1
+    edge = [x for x in range(w)] + [(h - 1) * w + x for x in range(w)] + [y * w for y in range(h)] + \
+           [y * w + w - 1 for y in range(h)]
+    grow(edge, loose, BG)
     min_area = pocket * w * h
-    mask = Image.new("L", (w, h), 255)
-    mp = mask.load()
-    for y in range(h):
-        for x in range(w):
-            c = wp[x, y]
-            if c == marker or (c in temps and temps[c] >= min_area):
-                mp[x, y] = 0
-    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
-    mask = mask.filter(ImageFilter.MinFilter(3))           # 往里收一圈，去掉背景色的毛边
-    mask = mask.resize(img.size, Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.2))  # 边缘柔化
+    for i in (range(w * h) if pocket > 0 else ()):
+        if not label[i] and dist[i] <= strict:
+            members = grow([i], strict, POCKET)
+            if len(members) < min_area:
+                for j in members:
+                    label[j] = 3  # 太小：眼白、高光，保留
+    mask = Image.frombytes("L", (w, h), bytes(0 if v in (BG, POCKET) else 255 for v in label))
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))  # 去掉孤立噪点
+    mask = mask.resize(img.size, Image.LANCZOS).filter(ImageFilter.GaussianBlur(0.8))
     bbox = mask.point(lambda v: 255 if v > 128 else 0).getbbox()
     out = img.convert("RGBA")
     out.putalpha(mask)
@@ -1132,7 +1156,7 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
                     c = p["crop"]
                     src = src.crop((int(src.width * c[0]), int(src.height * c[1]),
                                     int(src.width * c[2]), int(src.height * c[3])))
-                stk = cutout(to_bw(src) if bw else src, int(p.get("cutout_tol", 38)))
+                stk = cutout(to_bw(src) if bw else src, int(p.get("cutout_tol", 38)), float(p.get("pocket", 0)))
                 found += 1
             else:
                 if path:

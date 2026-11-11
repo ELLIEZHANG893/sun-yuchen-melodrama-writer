@@ -154,3 +154,23 @@ def test_sticker_cutout_and_template(tmp_path):
     r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render_visuals.py"), "comic", str(sp),
                         "--out", str(tmp_path / "o.png")], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
+
+
+def test_cutout_keeps_warm_hair_on_cream_background():
+    from PIL import Image, ImageDraw
+    im = Image.new("RGB", (300, 300), (251, 238, 213))     # 奶油底色
+    d = ImageDraw.Draw(im)
+    d.ellipse((60, 40, 240, 220), fill=(150, 90, 55))      # 暖棕色头发（红色通道和底色差不多）
+    d.ellipse((100, 90, 200, 210), fill=(250, 220, 195))   # 浅色皮肤
+    d.ellipse((120, 130, 150, 160), fill=(255, 255, 255))  # 眼白
+    cut = rv.cutout(im)
+    w, h = cut.size
+    assert cut.getpixel((w // 2, 30))[3] > 200            # 头发保留
+    assert cut.getpixel((w // 2 - 15, 105))[3] > 200      # 眼白保留
+
+
+def test_bubble_moves_off_face():
+    cell = (0, 0, 400, 400)
+    box = (150, 50, 300, 150)
+    moved = rv.clear_of_face(box, [0.4, 0.1, 0.7, 0.4], cell, 10)
+    assert moved != box
