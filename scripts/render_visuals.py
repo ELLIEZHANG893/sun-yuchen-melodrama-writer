@@ -24,6 +24,7 @@
 """
 import argparse
 import json
+import re
 import math
 import os
 import sys
@@ -656,8 +657,44 @@ TEMPLATES = {
             ([(.45, .70), (1, .70), (1, 1), (.39, 1)], "box", None),
         ],
     },
+    # ----- 贴纸人物：异形、无边框、压在格子上的人物（两种风格都能用）-----
+    "s-hero": {
+        "name": "贴纸主角",
+        "use": "顶部横条 → 左侧两个小格 + 右侧一格，中间一个贴纸人物压在格子之间 → 底部两格。人物登场、情绪顶点、这一页的主角时刻",
+        "panels": [
+            ([0, 0, 1, .2], "box", None),
+            ([0, .22, .3, .42], "box", None),
+            ([0, .44, .3, .64], "box", None),
+            ([.16, .19, .84, .74], "sticker", None),
+            ([.7, .22, 1, .64], "box", None),
+            ([0, .74, .5, 1], "box", None),
+            ([.5, .74, 1, 1], "box", None),
+        ],
+    },
+    "s-action": {
+        "name": "贴纸动作",
+        "use": "顶部三个小格蓄力 → 一个大幅动作的贴纸人物 + 速度线横跨页面中部 → 底部一格被人物压住一角。摔倒、扑过来、拍桌这类大动作",
+        "panels": [
+            ([0, 0, 1 / 3, .24], "box", None),
+            ([1 / 3, 0, 2 / 3, .24], "box", None),
+            ([2 / 3, 0, 1, .24], "box", None),
+            ([.02, .2, .98, .8], "sticker", "speed"),
+            ([0, .72, 1, 1], "box", None),
+        ],
+    },
+    "s-pop": {
+        "name": "出格反应",
+        "use": "四格叙事，最后一个人物从右下角“跳出”格子压在边框上做夸张反应。喜剧的吐槽、震惊、社死",
+        "panels": [
+            ([0, 0, 1, .3], "box", None),
+            ([0, .3, .55, .62], "box", None),
+            ([.55, .3, 1, .62], "box", None),
+            ([0, .62, 1, 1], "box", None),
+            ([.5, .48, 1.0, 1.0], "sticker", None),
+        ],
+    },
 }
-KIND_LABEL = {"box": "", "free": " · 无框", "inset": " · 插入小格"}
+KIND_LABEL = {"box": "", "free": " · 无框", "inset": " · 插入小格", "sticker": " · 贴纸人物（抠图）"}
 
 
 def rect_poly(r):
@@ -736,7 +773,7 @@ def layout_panels(layout, W, H, has_title, has_footer, st, boxes=None):
             if st["rtl"]:
                 fpts = [(1 - x, y) for x, y in fpts][::-1]
             pts = [(X0 + x * CW, Y0 + y * CH) for x, y in fpts]
-            if kind != "inset":  # 格子之间留格距；页边上的边不收，外缘对齐页边
+            if kind not in ("inset", "sticker"):  # 格子之间留格距；页边上的边不收，外缘对齐页边
                 n = len(fpts)
                 ds = [0 if on_page_edge(fpts[i], fpts[(i + 1) % n]) else g / 2 for i in range(n)]
                 pts = inset_poly(pts, ds)
@@ -772,6 +809,70 @@ def resolve_style(mode, overrides=None):
 def mix(c1, c2, t):
     a, b = ImageColor.getrgb(c1), ImageColor.getrgb(c2)
     return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
+
+
+def cutout(img, tol=38):
+    """把纯色背景（白 / 奶油色等）抠掉：从图像四边往里“灌水”，和背景色接近的连通区域变透明。"""
+    img = img.convert("RGB")
+    small = img.copy()
+    small.thumbnail((640, 640))
+    w, h = small.size
+    marker = (255, 0, 255)
+    work = small.copy()
+    seeds = [(x, y) for x in range(0, w, max(1, w // 24)) for y in (0, h - 1)] + \
+            [(x, y) for y in range(0, h, max(1, h // 24)) for x in (0, w - 1)]
+    for sx, sy in seeds:
+        if work.getpixel((sx, sy)) != marker:
+            ImageDraw.floodfill(work, (sx, sy), marker, thresh=tol)
+    mask = Image.new("L", (w, h), 255)
+    mp = mask.load()
+    wp = work.load()
+    for y in range(h):
+        for x in range(w):
+            if wp[x, y] == marker:
+                mp[x, y] = 0
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
+    mask = mask.resize(img.size, Image.LANCZOS)
+    bbox = mask.point(lambda v: 255 if v > 128 else 0).getbbox()
+    out = img.convert("RGBA")
+    out.putalpha(mask)
+    return out.crop(bbox) if bbox else out
+
+
+def paste_sticker(canvas, img, slot, anchor="bottom", outline=10):
+    """贴纸人物：抠图后等比放进格子（不裁切），加白色描边和淡阴影，压在其他格子上面。"""
+    x0, y0, x1, y1 = slot["box"]
+    bw_, bh = x1 - x0, y1 - y0
+    scale = min(bw_ / img.width, bh / img.height)
+    img = img.resize((max(1, int(img.width * scale)), max(1, int(img.height * scale))), Image.LANCZOS)
+    px = x0 + (bw_ - img.width) // 2
+    py = y1 - img.height if anchor == "bottom" else (y0 if anchor == "top" else y0 + (bh - img.height) // 2)
+    pad = outline + 12
+    a = Image.new("L", (img.width + pad * 2, img.height + pad * 2), 0)
+    a.paste(img.getchannel("A"), (pad, pad))
+    ring = a.filter(ImageFilter.MaxFilter(outline * 2 + 1))
+    shadow = ring.filter(ImageFilter.GaussianBlur(8)).point(lambda v: int(v * 0.35))
+    canvas.paste((40, 30, 25), (px - pad + 6, py - pad + 8), shadow)
+    canvas.paste((255, 255, 255), (px - pad, py - pad), ring)
+    canvas.paste(img, (px, py), img)
+
+
+def placeholder_sticker(w, h, label, desc, fill):
+    """没有图时，用一个人形轮廓占位，方便预览版式。"""
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    c = fill or (200, 200, 200)
+    cx = w / 2
+    r = min(w, h) * 0.13
+    d.ellipse((cx - r, h * 0.06, cx + r, h * 0.06 + 2 * r), fill=c)
+    d.rounded_rectangle((cx - r * 1.9, h * 0.06 + 2 * r + 6, cx + r * 1.9, h), radius=r, fill=c)
+    f = font(max(18, min(w, h) * 0.05))
+    d.text((cx, h * 0.55), label, font=f, fill=(90, 90, 90), anchor="mm")
+    if desc:
+        f2 = font(max(13, min(w, h) * 0.03))
+        for k, ln in enumerate(wrap(d, desc, f2, r * 3.4)[:5]):
+            d.text((cx, h * 0.62 + k * line_h(f2) * 1.1), ln, font=f2, fill=(100, 100, 100), anchor="ma")
+    return img
 
 
 def poly_mask(slot, shrink=0):
@@ -849,9 +950,13 @@ def cmd_layouts(a):
     print("自由分格模板（规整网格写 2x2、3x3、1x4）：")
     print(" 彩色：")
     for k, t in TEMPLATES.items():
-        if k.startswith("m"):
+        if k.startswith(("m", "s-")):
             continue
         print(f"  {k:11s} {t['name']}：{t['use']}")
+    print(" 贴纸人物 / 出格（彩色、黑白都能用）：")
+    for k, t in TEMPLATES.items():
+        if k.startswith("s-"):
+            print(f"  {k:11s} {t['name']}：{t['use']}")
     print(" 黑白：")
     for k, t in TEMPLATES.items():
         if k.startswith("m"):
@@ -868,6 +973,9 @@ def cmd_sizes(a):
                        for j, pos, a in cov.get(i, []))
         print("  " + panel_size_text(i, p) + note)
     print("脚本会自动裁切，比例接近即可。无框格请让画面背景简洁（纯色或浅色），边缘会羽化融进底色。")
+    if any(p["kind"] == "sticker" for p in panels):
+        print("贴纸人物格：出全身或半身人物，isolated on a plain pure white background, no background, no ground shadow；"
+              "脚本会自动抠图、加白描边，不裁切。其他有框格要画满背景。")
 
 
 def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_label="", draft=False):
@@ -898,8 +1006,8 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
 
     palette = st.get("placeholder")
     items = list(enumerate(zip(slots, panels), 1))
-    zorder = {"free": 0, "box": 1, "inset": 2}
-    items.sort(key=lambda it: zorder[it[1][0]["kind"]])  # 先铺无框大格，再有框格，最后插入小格
+    zorder = {"free": 0, "box": 1, "inset": 2, "sticker": 3}
+    items.sort(key=lambda it: zorder[it[1][0]["kind"]])  # 先铺无框大格，再有框格、插入小格，最后贴纸人物
     found = 0
 
     for i, (slot, p) in items:  # 第一遍：画面和格框
@@ -909,6 +1017,25 @@ def render_page(spec, base_dir, out, force_bw=False, layout_override=None, page_
         if kind == "free" and fill:
             fill = mix(fill, st["bg"], 0.45)
         label = f"格 {i} · {nearest_ratio(w, h)}{KIND_LABEL[kind]}"
+        if kind == "sticker":
+            path = p.get("image")
+            full = path and (path if os.path.isabs(path) else os.path.join(base_dir, path))
+            if full and os.path.exists(full):
+                src = Image.open(full)
+                if p.get("crop"):  # 从一张大图（比如定妆表）里裁出人物：[x0, y0, x1, y1] 比例
+                    c = p["crop"]
+                    src = src.crop((int(src.width * c[0]), int(src.height * c[1]),
+                                    int(src.width * c[2]), int(src.height * c[3])))
+                stk = cutout(to_bw(src) if bw else src, int(p.get("cutout_tol", 38)))
+                found += 1
+            else:
+                if path:
+                    print(f"  · 找不到图片 {path}，先用占位图", file=sys.stderr)
+                stk = placeholder_sticker(w, h, f"格 {i} · 贴纸人物", p.get("scene", ""), fill)
+            if p.get("speedlines", slot["fx"] == "speed"):
+                draw_speedlines(canvas, slot, st["ink"])
+            paste_sticker(canvas, stk, slot, p.get("anchor", "bottom"), int(p.get("outline", 10)))
+            continue
         img, ok = load_panel(p.get("image"), base_dir, w, h, label, p.get("scene", ""), bw,
                              tuple(p.get("focus", (0.5, 0.5))), fill)
         found += ok
@@ -1048,6 +1175,99 @@ def cmd_overlay(a):
         print(f"已生成 {out}（{len(pg.get('texts', []))} 处文字）")
 
 
+def cmd_lint(a):
+    """出图前检查提示词。分镜 JSON 顶层写 "cast": {"江遥": {"desc": "英文描述串", "ref": "ref-江遥.png"}}，
+    每格写 "characters": ["江遥"] 和 "prompt": "完整提示词"。"""
+    with open(a.spec, encoding="utf-8") as fh:
+        spec = json.load(fh)
+    cast = spec.get("cast", {})
+    pages = spec.get("pages") or [spec]
+    st = resolve_style("bw" if spec.get("mode") == "bw" else "color", spec.get("style"))
+    errors, warns = [], []
+    for n, pg in enumerate(pages, 1):
+        ps = dict(pg)
+        for k in INHERIT:
+            if k in spec and k not in ps:
+                ps[k] = spec[k]
+        W, H = ps.get("canvas", [CANVAS_W, CANVAS_H])
+        layout = ps.get("layout") or "4-inset"
+        slots = layout_panels(layout, W, H, n == 1 and bool(spec.get("title") or ps.get("title")),
+                              n == len(pages) and bool(spec.get("footer") or ps.get("footer")), st, ps.get("boxes"))
+        for i, (slot, p) in enumerate(zip(slots, ps.get("panels", [])), 1):
+            where = f"第{n}页 格{i}"
+            prompt = p.get("prompt", "")
+            if not prompt:
+                warns.append(f"{where}：没有 prompt，跳过（复用已有的图可以忽略）")
+                continue
+            low = prompt.lower()
+            chars = p.get("characters", [])
+            for name, info in cast.items():
+                desc = info["desc"] if isinstance(info, dict) else info
+                mentioned = name in p.get("scene", "") or desc.split(",")[0].strip().lower() in low
+                if name in chars and desc not in prompt:
+                    errors.append(f"{where}：画面里有{name}，但提示词里没有她/他完整的描述串")
+                elif mentioned and name not in chars:
+                    errors.append(f"{where}：画面描述提到了{name}，但 characters 里没列，提示词也可能缺描述串")
+            people = re.search(r"\b(woman|women|man|men|girl|boy|person|people|she|he|her|his|hand|hands|sleeve|"
+                               r"shoulder|face|figure|someone)\b", low)
+            if people and not any((info["desc"] if isinstance(info, dict) else info) in prompt for info in cast.values()):
+                extras = ("receptionist", "manager", "crowd", "passenger", "staff", "waiter", "bartender")
+                if not any(x in low for x in extras) or "her " in low or "hand" in low:
+                    errors.append(f"{where}：提示词里出现了人（{people.group(0)}），却没有任何主要角色的描述串；"
+                                  "如果是主角的手、背影、袖子，也要写完整描述串，否则模型会自己编一个人")
+            w, h = slot["box"][2] - slot["box"][0], slot["box"][3] - slot["box"][1]
+            ratio = nearest_ratio(w, h)
+            if f"aspect ratio {ratio}" not in low:
+                warns.append(f"{where}：这一格建议比例是 {ratio}，提示词里没写或写的不一样")
+            if "no text" not in low:
+                errors.append(f"{where}：负面提示缺少 no text")
+            if slot["kind"] in ("free", "sticker"):
+                if "plain" not in low or "background" not in low:
+                    errors.append(f"{where}：{KIND_LABEL[slot['kind']].strip(' ·')}要写纯色背景（isolated on a plain ... background）")
+            elif "background" not in low:
+                warns.append(f"{where}：有框格最好写明背景铺满整格（detailed background filling the entire frame），避免留白")
+            if any(k in p.get("scene", "") for k in ("手机", "屏幕", "二维码")) and not any(
+                    k in low for k in ("screen facing", "screen-up", "screen up", "face-down", "screen faces")):
+                warns.append(f"{where}：画面里有手机 / 屏幕，提示词没写屏幕朝向")
+    for e in errors:
+        print("✗ " + e)
+    for w_ in warns:
+        print("· " + w_)
+    print(f"检查完：{len(errors)} 个错误，{len(warns)} 个提醒")
+    if errors:
+        sys.exit(1)
+
+
+def cmd_sheet(a):
+    """一致性核查对照图：定妆表放第一行，其余图按顺序排成网格，每张标上文件名。"""
+    W = a.width
+    rows = []
+    for group in (a.refs or [], a.images or []):
+        ims = []
+        for f in group:
+            im = Image.open(f).convert("RGB")
+            im = im.resize((W, int(im.height * W / im.width)))
+            canvas = Image.new("RGB", (W, im.height + 34), "white")
+            canvas.paste(im, (0, 34))
+            ImageDraw.Draw(canvas).text((6, 4), os.path.basename(f), font=font(22), fill=(30, 30, 30))
+            ims.append(canvas)
+        for k in range(0, len(ims), a.cols):
+            rows.append(ims[k:k + a.cols])
+    if not rows:
+        sys.exit("没有图片")
+    gap = 10
+    out = Image.new("RGB", (a.cols * (W + gap) + gap, sum(max(i.height for i in r) + gap for r in rows) + gap), (150, 150, 150))
+    y = gap
+    for r in rows:
+        x = gap
+        for im in r:
+            out.paste(im, (x, y))
+            x += W + gap
+        y += max(i.height for i in r) + gap
+    out.save(a.out)
+    print(f"已生成 {a.out}：第一行是定妆表，下面是要核查的图")
+
+
 def cmd_cover(a):
     rw, rh = (int(v) for v in a.ratio.split(":"))
     W = a.width
@@ -1166,6 +1386,16 @@ def main():
 
     sub.add_parser("layouts", help="列出自由分格模板和适用场景")
 
+    lt = sub.add_parser("lint", help="出图前检查提示词：人物描述串、比例、背景、负面提示、屏幕朝向")
+    lt.add_argument("spec")
+
+    sh = sub.add_parser("sheet", help="生成一致性核查对照图：定妆表 + 所有分格图")
+    sh.add_argument("--refs", nargs="*")
+    sh.add_argument("--images", nargs="*")
+    sh.add_argument("--cols", type=int, default=4)
+    sh.add_argument("--width", type=int, default=420)
+    sh.add_argument("--out", default="consistency-sheet.png")
+
     s = sub.add_parser("sizes", help="查看版式每格尺寸、建议出图比例和格子类型")
     s.add_argument("--layout", default="4-inset")  # 黑白可用 m4-closeup 等
     s.add_argument("--mode", choices=["color", "bw"], default="color")
@@ -1178,6 +1408,8 @@ def main():
     if a.cmd == "layouts":
         return cmd_layouts(a)
     setup_fonts(a.font, a.serif_font)
+    if a.cmd in ("lint", "sheet"):
+        return {"lint": cmd_lint, "sheet": cmd_sheet}[a.cmd](a)
     {"cover": cmd_cover, "comic": cmd_comic, "overlay": cmd_overlay}[a.cmd](a)
 
 

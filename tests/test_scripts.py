@@ -120,3 +120,34 @@ def test_draft_then_overlay(tmp_path):
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     assert (tmp_path / "final.png").exists()
+
+
+def test_lint_flags_person_without_description(tmp_path):
+    desc = "Jiang Yao, 28-year-old Chinese woman, chestnut hair in a low ponytail"
+    spec = {"mode": "color", "cast": {"江遥": {"desc": desc}}, "pages": [{"layout": "custom", "boxes": {"1": [0, 0, 1, 1]},
+            "panels": [{"scene": "吊牌特写", "characters": [],
+                        "prompt": "close-up of a price tag, a woman's hand, aspect ratio 1:1, no text"}]}]}
+    sp = tmp_path / "s.json"
+    sp.write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render_visuals.py"), "lint", str(sp)],
+                       capture_output=True, text=True)
+    assert r.returncode == 1
+    assert "描述串" in r.stdout
+
+
+@pytest.mark.skipif(not has_cjk_font(), reason="没有中文字体")
+def test_sticker_cutout_and_template(tmp_path):
+    from PIL import Image, ImageDraw
+    art = tmp_path / "fig.png"
+    im = Image.new("RGB", (400, 800), (255, 255, 255))
+    ImageDraw.Draw(im).ellipse((120, 40, 280, 200), fill=(200, 120, 90))
+    ImageDraw.Draw(im).rectangle((100, 200, 300, 780), fill=(60, 60, 120))
+    im.save(art)
+    cut = rv.cutout(Image.open(art))
+    assert cut.mode == "RGBA" and cut.getpixel((0, 0))[3] < 50
+    spec = {"layout": "s-hero", "panels": [{}, {}, {}, {"image": str(art)}, {}, {}, {}]}
+    sp = tmp_path / "p.json"
+    sp.write_text(json.dumps(spec), encoding="utf-8")
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render_visuals.py"), "comic", str(sp),
+                        "--out", str(tmp_path / "o.png")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
