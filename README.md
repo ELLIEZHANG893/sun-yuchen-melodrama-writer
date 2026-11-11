@@ -72,6 +72,8 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 - `SKILL.md`：工作流和输出规则。
 - `references/hook-and-pacing.md`：节奏、钩子、卡点手册。
 - `references/trope-library.md`：题材公式库。
+- `references/persona-library.md`：人设卡与人设共创、女生 / 男生人设库、反差人设的画法。
+- `examples/persona-cards.md`：深圳都市故事里江遥、梁屿的人设卡样例。
 - `references/character-design.md`：角色差异化（八个设计轴、避开 AI 默认脸、角色登记表）和夸张表情词库。
 - `examples/cast-registry.md`：角色登记表样例。
 - `references/review.md`：交付前 review 清单（设定、章节、人设、提示词、出图、排版、修改影响面）。
