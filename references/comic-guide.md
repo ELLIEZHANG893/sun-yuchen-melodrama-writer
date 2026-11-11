@@ -288,6 +288,9 @@ python scripts/render_visuals.py overlay ep01-overlay.json        # 输出 ep01-
 
 ## 交付前自检
 
+完整清单见 [Review 手册](review.md) 第四、五、六节；画面逻辑规则见 [design.md](design.md) 4.6b。
+
+
 - 最后一格是不是停在和正文结尾一样的钩子上？
 - 每格是否只有一个动作？相邻两格景别是否不同？
 - 每格提示词是否以确认过的画风前缀开头？
