@@ -22,12 +22,12 @@
 【外观卡】林晚｜主角，审计员
 年龄段 / 身高体型：27 岁，中等身高，偏瘦
 脸型 / 眼型：鹅蛋脸，眼尾微微上挑
-发型轮廓 + 发色：齐肩黑色直发，左边别在耳后
+发型轮廓 + 发色：齐肩黑色直发，一侧别在耳后
 固定服装：米色风衣 + 白衬衫 + 藏青直筒裤
 角色配色：米色 + 天蓝
-视觉锚点：左手腕旧棕色皮带手表 + 右眼下一颗小痣
+视觉锚点：一只手腕上的旧棕色皮带手表 + 一只眼睛下方明显的小痣
 默认表情：平静
-英文描述串：Lin Wan, 27-year-old Chinese woman, slim, oval face with slightly upturned eye corners, shoulder-length straight black hair tucked behind her left ear, small mole under her right eye, beige trench coat over a white shirt, navy trousers, worn brown leather-strap watch on her left wrist
+英文描述串：Lin Wan, 27-year-old Chinese woman, about 7 heads tall, slim, oval face with slightly upturned eye corners, shoulder-length straight black hair tucked behind one ear, a noticeable beauty mark under one eye, beige trench coat over a white shirt, navy trousers, worn brown leather-strap watch on one wrist
 
 【外观卡】周美芬｜母亲，对手
 年龄段 / 身高体型：55 岁，个子矮，体型敦实
