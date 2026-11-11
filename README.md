@@ -72,6 +72,8 @@ python scripts/render_visuals.py comic examples/ep01-comic.json
 - `SKILL.md`：工作流和输出规则。
 - `references/hook-and-pacing.md`：节奏、钩子、卡点手册。
 - `references/trope-library.md`：题材公式库。
+- `references/character-design.md`：角色差异化（八个设计轴、避开 AI 默认脸、角色登记表）和夸张表情词库。
+- `examples/cast-registry.md`：角色登记表样例。
 - `references/review.md`：交付前 review 清单（设定、章节、人设、提示词、出图、排版、修改影响面）。
 - `references/foreshadow-and-comedy.md`：伏笔清单的设计与回收、让故事好笑的六个手法。
 - `references/case-notes.md`：热门 IP 拆解笔记。
